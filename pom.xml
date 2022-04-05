@@ -44,7 +44,7 @@
                 <version>3.0.3</version>
                 <configuration>
                     <processTypes>
-                        <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>
+                        <worker>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</worker>
                     </processTypes>
                 </configuration>
             </plugin>
