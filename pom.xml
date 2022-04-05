@@ -26,7 +26,6 @@
             <name>m2-dv8tion</name>
             <url>https://m2.dv8tion.net/releases</url>
         </repository>
-
     </repositories>
 
     <dependencies>
@@ -43,7 +42,13 @@
                 <groupId>com.heroku.sdk</groupId>
                 <artifactId>heroku-maven-plugin</artifactId>
                 <version>3.0.3</version>
+                <configuration>
+                    <processTypes>
+                        <web>java $JAVA_OPTS -cp target/classes:target/dependency/* Main</web>
+                    </processTypes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>
