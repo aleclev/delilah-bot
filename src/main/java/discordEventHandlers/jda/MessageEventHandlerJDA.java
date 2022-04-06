@@ -8,5 +8,7 @@ public class MessageEventHandlerJDA extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         if (event.getMessage().getContentRaw().equals("d/ping"))
             event.getChannel().sendMessage("Hello world !").queue();
+        if (event.getMessage().getContentRaw().equals("d/pong"))
+            event.getChannel().sendMessage("Pang").queue();
     }
 }
