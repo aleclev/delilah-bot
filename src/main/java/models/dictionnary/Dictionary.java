@@ -5,7 +5,7 @@ import models.user.User;
 import java.util.List;
 
 public class Dictionary {
-    User owner;
 
+    private DictionaryPermissions dictionaryPermissions;
     private List<DictionaryEntry> entries;
 }
