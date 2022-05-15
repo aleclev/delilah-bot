@@ -1,7 +1,6 @@
 package repositories;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public interface Repository<T> {
     T getById(String id);

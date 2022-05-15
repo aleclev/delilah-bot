@@ -1,6 +1,5 @@
 package repositories.hibernate;
 
-import com.speedment.jpastreamer.application.JPAStreamer;
 import models.dictionnary.Dictionary;
 import org.hibernate.SessionFactory;
 
