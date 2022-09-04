@@ -1,1 +1,1 @@
-worker: java $JAVA_OPTS -cp target/classes:target/dependency/* Main
+worker: java $JAVA_OPTS -cp target/classes:target/dependency/* delilah.DelilahApplication
