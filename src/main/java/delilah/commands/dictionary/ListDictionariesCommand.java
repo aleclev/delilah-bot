@@ -2,8 +2,7 @@ package delilah.commands.dictionary;
 
 import delilah.commands.AbstractSlashCommand;
 import delilah.repositories.DictionaryRepository;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import org.jetbrains.annotations.NotNull;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ListDictionariesCommand extends AbstractSlashCommand {
@@ -16,7 +15,7 @@ public class ListDictionariesCommand extends AbstractSlashCommand {
     }
 
     @Override
-    protected void execute(SlashCommandEvent commandEvent) {
+    protected void execute(SlashCommandInteractionEvent commandEvent) {
 
     }
 }

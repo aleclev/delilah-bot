@@ -1,7 +1,7 @@
 package delilah.commands.misc;
 
 import delilah.commands.AbstractSlashCommand;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class PingCommand extends AbstractSlashCommand {
     }
 
     @Override
-    protected void execute(SlashCommandEvent commandEvent) {
+    protected void execute(SlashCommandInteractionEvent commandEvent) {
         List<String> responses = Arrays.asList(
                 "Hello!",
                 "Hi!",

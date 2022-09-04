@@ -5,10 +5,9 @@ import delilah.models.dictionnary.Dictionary;
 import delilah.models.user.User;
 import delilah.repositories.DictionaryRepository;
 import delilah.repositories.UserRepository;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ public class AddToDictionaryCommand extends AbstractSlashCommand {
     }
 
     @Override
-    protected void execute(SlashCommandEvent commandEvent) {
+    protected void execute(SlashCommandInteractionEvent commandEvent) {
 
         String dictionaryId = null;
 

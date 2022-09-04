@@ -7,7 +7,7 @@ import delilah.models.dictionnary.Dictionary;
 import delilah.models.user.User;
 import delilah.repositories.DictionaryRepository;
 import delilah.repositories.UserRepository;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +31,7 @@ public class RegisterDiscordCommand extends AbstractSlashCommand {
     }
 
     @Override
-    protected void execute(SlashCommandEvent commandEvent) {
+    protected void execute(SlashCommandInteractionEvent commandEvent) {
 
         User user = userFactory.createUser(commandEvent.getUser().getId());
         Dictionary dictionary = dictionaryFactory.createDefaultRootDictionary();
