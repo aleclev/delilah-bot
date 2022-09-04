@@ -1,34 +1,33 @@
 package delilah.models.dictionnary;
 
+import delilah.models.user.User;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 import java.util.Map;
 
+@Getter
+@Setter
+@Entity
+@Table
 public class Dictionary {
 
-    private String dictionaryId;
+    @Id
+    String dictionaryId;
 
-    private DictionaryPermissions dictionaryPermissions;
+    @ElementCollection
+    Map<String, String> entries;
 
-    private Map<String, DictionaryEntry> entries;
+    @ManyToOne
+    User owner;
 
-    public Dictionary() {
-
-    }
-
-    public Dictionary(String dictionaryId, DictionaryPermissions dictionaryPermissions, Map<String, DictionaryEntry> entries) {
+    public Dictionary(String dictionaryId, User owner, Map<String, String> entries) {
         this.dictionaryId = dictionaryId;
-        this.dictionaryPermissions = dictionaryPermissions;
         this.entries = entries;
+        this.owner = owner;
     }
 
-    public String getDictionaryId() {
-        return dictionaryId;
-    }
+    private Dictionary() { }
 
-    public DictionaryPermissions getDictionaryPermissions() {
-        return dictionaryPermissions;
-    }
-
-    public Map<String, DictionaryEntry> getEntries() {
-        return entries;
-    }
 }

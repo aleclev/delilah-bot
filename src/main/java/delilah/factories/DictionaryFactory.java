@@ -1,15 +1,24 @@
 package delilah.factories;
 
 import delilah.models.dictionnary.Dictionary;
-import delilah.models.dictionnary.DictionaryEntry;
-import delilah.models.dictionnary.DictionaryPermissions;
+import delilah.models.user.User;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
+@Component
 public class DictionaryFactory {
-    public Dictionary createEmptyDictionary(String dictionaryId, DictionaryPermissions dictionaryPermissions){
-        Map entries = new TreeMap<String, DictionaryEntry>();
-        return new Dictionary(dictionaryId, dictionaryPermissions, entries);
+
+    public Dictionary createDefaultDictionary(String dictionaryId, User owner){
+        Map<String, String> entries = new TreeMap<String, String>();
+        return new Dictionary(dictionaryId, owner, entries);
+    }
+
+    public Dictionary createDefaultRootDictionary() {
+        String dictionaryId = UUID.randomUUID().toString();
+
+        return createDefaultDictionary(dictionaryId, null);
     }
 }
