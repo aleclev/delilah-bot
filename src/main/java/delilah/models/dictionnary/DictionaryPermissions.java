@@ -1,20 +1,32 @@
-package models.dictionnary;
+package delilah.models.dictionnary;
 
-import models.user.User;
+import delilah.models.user.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
+
 public class DictionaryPermissions {
+
+    private String DictionaryPermissionsId;
+
     private User owner;
+
+    Dictionary dictionary;
+
+
     private List<DictionaryPermissionOverride> permissionOverrides;
-    private TreeMap<DictionaryAction, DictionaryPermissionScope> defaultPermissions;
+
+
+    private Map<DictionaryAction, DictionaryPermissionScope> defaultPermissions;
 
     public DictionaryPermissions(
-            User owner,
+            String dictionaryPermissionsId, User owner,
             List<DictionaryPermissionOverride> permissionOverrides,
             TreeMap<DictionaryAction,
-            DictionaryPermissionScope> defaultPermissions) {
+                    DictionaryPermissionScope> defaultPermissions) {
+        DictionaryPermissionsId = dictionaryPermissionsId;
 
         this.owner = owner;
         this.permissionOverrides = permissionOverrides;

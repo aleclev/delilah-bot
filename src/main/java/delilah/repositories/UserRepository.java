@@ -1,6 +1,6 @@
-package repositories;
+package delilah.repositories;
 
-import models.user.User;
+import delilah.models.user.User;
 
 public interface UserRepository extends Repository<User> {
     User getByDiscordId(Long discordId);

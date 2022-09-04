@@ -1,4 +1,5 @@
-package models.dictionnary;
+package delilah.models.dictionnary;
+
 
 public enum DictionaryAction {
     Read,

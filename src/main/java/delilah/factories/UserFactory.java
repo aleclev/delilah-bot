@@ -1,6 +1,6 @@
-package factories;
+package delilah.factories;
 
-import models.user.User;
+import delilah.models.user.User;
 
 import java.util.UUID;
 

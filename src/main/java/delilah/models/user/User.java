@@ -1,11 +1,8 @@
-package models.user;
+package delilah.models.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
-@Entity
 public class User {
-    @Id
+
     Long discordId;
     String userId;
 

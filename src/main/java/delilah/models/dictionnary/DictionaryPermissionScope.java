@@ -1,4 +1,4 @@
-package models.dictionnary;
+package delilah.models.dictionnary;
 
 public enum DictionaryPermissionScope {
     Everyone,
