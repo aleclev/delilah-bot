@@ -1,7 +1,8 @@
 package delilah.discord;
 
-import delilah.commands.CommandDispatcher;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import delilah.commands.CommandEventHandler;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,15 @@ import org.springframework.stereotype.Component;
 public class EventListener extends ListenerAdapter {
 
     @Autowired
-    private CommandDispatcher dispatcher;
+    private CommandEventHandler dispatcher;
 
     @Override
-    public void onSlashCommand(@NotNull SlashCommandEvent event) {
-        dispatcher.handle(event);
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        dispatcher.onSlashcommandInteractionEvent(event);
+    }
+
+    @Override
+    public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event) {
+        dispatcher.onCommandAutoCompleteInteraction(event);
     }
 }
