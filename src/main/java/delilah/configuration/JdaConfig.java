@@ -1,6 +1,6 @@
 package delilah.configuration;
 
-import delilah.discord.EventListener;
+import delilah.interf4ce.discord.EventListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import org.springframework.beans.factory.annotation.Autowired;

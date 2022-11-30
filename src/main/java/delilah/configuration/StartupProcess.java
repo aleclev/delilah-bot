@@ -1,10 +1,9 @@
 package delilah.configuration;
 
-import delilah.commands.AbstractSlashCommand;
+import delilah.interf4ce.commands.AbstractSlashCommand;
+import delilah.interf4ce.commands.payloadProcessing.SlashCommandArgumentCreator;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -12,11 +11,12 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class StartupProcess implements ApplicationListener<ApplicationReadyEvent> {
 
+    @Autowired
+    private SlashCommandArgumentCreator slashCommandArgumentCreator;
     @Autowired
     JDA jda;
 
@@ -31,6 +31,9 @@ public class StartupProcess implements ApplicationListener<ApplicationReadyEvent
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
+
+        commands.forEach(command -> slashCommandArgumentCreator.populateOptionsMapping(command));
+
         if (phase.equals("dev")) devStartup();
         else if (phase.equals("prod")) prodStartup();
     }
@@ -45,10 +48,6 @@ public class StartupProcess implements ApplicationListener<ApplicationReadyEvent
         Guild testGuild = jda.getGuildById(testServerId);
 
         testGuild.updateCommands().addCommands(commands).queue();
-    }
-
-    private void updateCommand(Command toUpdate, List<Command> result) {
-
     }
 
     private void prodStartup() {
