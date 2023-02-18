@@ -8,6 +8,10 @@ public class DictionaryWord {
         this.word = word;
     }
 
+    public boolean isSimilarTo(DictionaryWord word2) {
+        return this.word.contains(word2.word) || word2.word.contains(this.word);
+    }
+
     @Override
     public boolean equals(Object otherWord) {
         if (! (otherWord instanceof DictionaryWord)) return false;

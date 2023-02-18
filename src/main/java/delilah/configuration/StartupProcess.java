@@ -1,7 +1,8 @@
 package delilah.configuration;
 
-import delilah.interf4ce.commands.AbstractSlashCommand;
-import delilah.interf4ce.commands.payloadProcessing.SlashCommandArgumentCreator;
+import delilah.client.commands.AbstractSlashCommand;
+import delilah.client.commands.payloadProcessing.SlashCommandArgumentCreator;
+import delilah.client.discord.EventListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,10 @@ public class StartupProcess implements ApplicationListener<ApplicationReadyEvent
     JDA jda;
 
     @Autowired
-    List<AbstractSlashCommand> commands;
+    EventListener eventListener;
 
-    @Value("${delilah.phase}")
-    String phase;
+    @Autowired
+    List<AbstractSlashCommand> commands;
 
     @Value("${delilah.discord.test-server.id}")
     String testServerId;
@@ -34,11 +35,12 @@ public class StartupProcess implements ApplicationListener<ApplicationReadyEvent
 
         commands.forEach(command -> slashCommandArgumentCreator.populateOptionsMapping(command));
 
-        if (phase.equals("dev")) devStartup();
-        else if (phase.equals("prod")) prodStartup();
+        jda.addEventListener(eventListener);
+
+        startup();
     }
 
-    private void devStartup() {
+    private void startup() {
         try {
             jda.awaitReady();
         } catch (InterruptedException e) {
@@ -48,9 +50,5 @@ public class StartupProcess implements ApplicationListener<ApplicationReadyEvent
         Guild testGuild = jda.getGuildById(testServerId);
 
         testGuild.updateCommands().addCommands(commands).queue();
-    }
-
-    private void prodStartup() {
-
     }
 }
