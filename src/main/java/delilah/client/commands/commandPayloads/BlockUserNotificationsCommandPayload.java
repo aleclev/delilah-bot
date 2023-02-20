@@ -5,6 +5,6 @@ import delilah.domain.models.user.User;
 
 public class BlockUserNotificationsCommandPayload {
 
-    @Argument(name = "user_to_block", description = "Block notifications from this user.")
-    public User userToBlock;
+    @Argument(description = "Block notifications from this user.")
+    public User user;
 }

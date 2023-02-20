@@ -7,13 +7,15 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.ExecutionException;
+
 public abstract class AbstractSlashCommand extends CommandDataImpl {
 
     public AbstractSlashCommand(@NotNull String name, @NotNull String description) {
         super(name, description);
     }
 
-    public abstract void execute(SlashCommandInteractionEvent commandEvent, Object payload);
+    public abstract void execute(SlashCommandInteractionEvent commandEvent, Object payload) throws ExecutionException, InterruptedException;
 
     @Override
     public boolean equals(Object obj) {

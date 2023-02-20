@@ -36,7 +36,8 @@ public class DictionaryService {
 
     public DictionaryEntry removeDictionaryEntryForUser(String discordId, String word) {
         User user = userRepository.findByDiscordId(discordId);
-        DictionaryEntry entry = getDictionaryEntryForUser(discordId, word);
+
+        DictionaryEntry entry = user.getRootDictionary().findEntry(word);
 
         var temp = user.getRootDictionary().removeEntry(entry);
         userRepository.save(user);

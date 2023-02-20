@@ -5,6 +5,7 @@ import delilah.client.commands.commandPayloads.DictionaryGetEntryCommandPayload;
 import delilah.client.commands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.domain.models.dictionnary.DictionaryEntry;
 import delilah.services.DictionaryService;
+import delilah.services.autocomplete.DictionaryFindEntryAutoCompleteService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 @Component
 @ConsumesPayload(type = DictionaryGetEntryCommandPayload.class)
 public class DictionaryGetEntryCommand extends AbstractSlashCommand {
+
+    @Autowired
+    DictionaryFindEntryAutoCompleteService dictionaryFindEntryAutoCompleteService;
 
     @Autowired
     DictionaryService dictionaryService;
@@ -42,12 +46,6 @@ public class DictionaryGetEntryCommand extends AbstractSlashCommand {
     @Override
     public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteraction event) {
 
-        String userInput = event.getFocusedOption().getValue();
-
-        String discordId = event.getUser().getId();
-
-        event.replyChoices(dictionaryService.getEntriesLikeInputForUser(discordId, userInput).stream()
-                .map(k -> new Command.Choice(k.getWord().toString(), k.getWord().toString()))
-                .collect(Collectors.toList())).queue();
+        event.replyChoices(dictionaryFindEntryAutoCompleteService.getSuggestions(event)).queue();
     }
 }

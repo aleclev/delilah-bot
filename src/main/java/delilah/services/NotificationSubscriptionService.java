@@ -38,5 +38,24 @@ public class NotificationSubscriptionService {
         return false;
     }
 
+    public boolean blockUser(String discordId, User userToBlock) {
 
+        User user = userService.getOrRegisterUserByDiscordId(discordId);
+
+        boolean temp = user.muteUser(userToBlock);
+        userRepository.save(user);
+
+        return temp;
+    }
+
+
+    public boolean unblockUser(String discordId, User userToUnblock) {
+
+        User user = userService.getOrRegisterUserByDiscordId(discordId);
+
+        boolean temp = user.unmuteUser(userToUnblock);
+        userRepository.save(user);
+
+        return temp;
+    }
 }

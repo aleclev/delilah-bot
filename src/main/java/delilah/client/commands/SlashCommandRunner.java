@@ -35,12 +35,12 @@ public class SlashCommandRunner implements Runnable {
             commandEvent.reply(e.getMessage()).queue();
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof AbstractDelilahException)
-                commandEvent.reply(e.getTargetException().getMessage()).queue();
+                commandEvent.getHook().sendMessage(e.getTargetException().getMessage()).queue();
             else
-                commandEvent.reply("An unknown error occurred !").queue();
-                e.printStackTrace();
+                commandEvent.getHook().sendMessage("An unknown error occurred !").queue();
+            e.printStackTrace();
         } catch (Exception e) {
-            commandEvent.reply("An unknown error occurred !").queue();
+            commandEvent.getHook().sendMessage("An unknown error occurred !").queue();
             e.printStackTrace();
         }
     }

@@ -26,9 +26,13 @@ public class NotificationProfile {
 
     public boolean blockUser(String discordId) {
         if (blockedUsersDiscordIds.contains(discordId)) return false;
-        else return blockedUsersDiscordIds.contains(discordId);
+        else return blockedUsersDiscordIds.add(discordId);
     }
 
+    public boolean unblockUser(String discordId) {
+        if (!blockedUsersDiscordIds.contains(discordId)) return false;
+        else return blockedUsersDiscordIds.remove(discordId);
+    }
     public boolean hasSubscription(NotificationSubscription subscription) {
         return subscriptions.stream().filter(s -> s.equals(subscription)).count() > 0;
     }

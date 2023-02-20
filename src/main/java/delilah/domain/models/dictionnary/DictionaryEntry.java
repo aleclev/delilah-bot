@@ -24,6 +24,6 @@ public class DictionaryEntry {
 
     @Override
     public String toString() {
-        return String.format("Word: %s\nDefinition:%s", word, definition);
+        return String.format("Word: %s\nDefinition: %s", word, definition);
     }
 }

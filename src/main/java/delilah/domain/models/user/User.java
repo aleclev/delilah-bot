@@ -71,4 +71,12 @@ public class User {
     public boolean removeNotificationSubscription(NotificationSubscription subscription) {
         return notificationProfile.removeSubscription(subscription);
     }
+
+    public boolean muteUser(User userToBlock) {
+        return notificationProfile.blockUser(userToBlock.getDiscordId());
+    }
+
+    public boolean unmuteUser(User userToUnblock) {
+        return notificationProfile.unblockUser(userToUnblock.getDiscordId());
+    }
 }

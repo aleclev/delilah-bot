@@ -8,25 +8,31 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @ConsumesPayload(type = BlockUserNotificationsCommandPayload.class)
-public class NotificationBlockUserCommand extends AbstractSlashCommand {
+public class NotificationUnblockUserCommand extends AbstractSlashCommand {
 
     @Autowired
     private NotificationSubscriptionService notificationSubscriptionService;
 
-    public NotificationBlockUserCommand() {
-        super("notification-block-user", "Block notifications from specified user.");
+    public NotificationUnblockUserCommand() {
+        super("notification-unblock-user", "Unblocks notifications from the specified user.");
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent commandEvent, Object payload) {
         var p = (BlockUserNotificationsCommandPayload)payload;
 
-        if (notificationSubscriptionService.blockUser(commandEvent.getUser().getId(), p.user))
-            commandEvent.reply("User blocked!").queue();
-        else
-            commandEvent.reply("User is already blocked.").queue();
+        if (Objects.isNull(p.user)) {
+            commandEvent.reply("Cannot unblock an unregistered user.").queue();
+            return;
+        }
 
+        if (notificationSubscriptionService.unblockUser(commandEvent.getUser().getId(), p.user))
+            commandEvent.reply("User was unblocked!").queue();
+        else
+            commandEvent.reply("This user was not on your block list.").queue();
     }
 }
