@@ -1,6 +1,7 @@
 package delilah.client.commands.notification;
 
 import delilah.client.commands.AbstractSlashCommand;
+import delilah.client.commands.AbstractSlashSingleCommand;
 import delilah.client.commands.commandPayloads.NotificationBroadcastCommandPayload;
 import delilah.client.commands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.domain.models.notification.NotificationBroadcastReport;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
 
 @Component
 @ConsumesPayload(type = NotificationBroadcastCommandPayload.class)
-public class NotificationBroadcastCommand extends AbstractSlashCommand {
+public class NotificationBroadcastCommand extends AbstractSlashSingleCommand {
 
     @Autowired
     NotificationBroadcastService notificationBroadcastService;

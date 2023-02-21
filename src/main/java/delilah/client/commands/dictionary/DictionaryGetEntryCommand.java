@@ -1,6 +1,7 @@
 package delilah.client.commands.dictionary;
 
 import delilah.client.commands.AbstractSlashCommand;
+import delilah.client.commands.AbstractSlashSubcommand;
 import delilah.client.commands.commandPayloads.DictionaryGetEntryCommandPayload;
 import delilah.client.commands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.domain.models.dictionnary.DictionaryEntry;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Component
 @ConsumesPayload(type = DictionaryGetEntryCommandPayload.class)
-public class DictionaryGetEntryCommand extends AbstractSlashCommand {
+public class DictionaryGetEntryCommand extends AbstractSlashSubcommand {
 
     @Autowired
     DictionaryFindEntryAutoCompleteService dictionaryFindEntryAutoCompleteService;
@@ -25,7 +26,7 @@ public class DictionaryGetEntryCommand extends AbstractSlashCommand {
     DictionaryService dictionaryService;
 
     public DictionaryGetEntryCommand() {
-        super("dictionary-find-entry", "Find an entry in the specified dictionary.");
+        super("get", "Find an entry in the specified dictionary.");
     }
 
     @Override

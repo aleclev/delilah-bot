@@ -1,6 +1,7 @@
 package delilah.client.commands.notification;
 
 import delilah.client.commands.AbstractSlashCommand;
+import delilah.client.commands.AbstractSlashSingleCommand;
 import delilah.client.commands.commandPayloads.BlockUserNotificationsCommandPayload;
 import delilah.client.commands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.services.NotificationSubscriptionService;
@@ -12,7 +13,7 @@ import java.util.Objects;
 
 @Component
 @ConsumesPayload(type = BlockUserNotificationsCommandPayload.class)
-public class NotificationUnblockUserCommand extends AbstractSlashCommand {
+public class NotificationUnblockUserCommand extends AbstractSlashSingleCommand {
 
     @Autowired
     private NotificationSubscriptionService notificationSubscriptionService;

@@ -23,11 +23,8 @@ public class SlashCommandRunner implements Runnable {
     public void run() {
 
         try {
-            Object payload = null;
-            if (command.getClass().isAnnotationPresent(ConsumesPayload.class)) {
-                Class payloadClass = command.getClass().getAnnotation(ConsumesPayload.class).type();
-                payload = extractor.extractPayload(command.getClass(), payloadClass, commandEvent);
-            }
+
+            Object payload = extractor.extractPayload(command.getClass(), commandEvent.getOptions());
 
             command.getClass().getMethod("execute", SlashCommandInteractionEvent.class, Object.class).invoke(command, commandEvent, payload);
 

@@ -1,6 +1,6 @@
 package delilah.client.commands.dictionary;
 
-import delilah.client.commands.AbstractSlashCommand;
+import delilah.client.commands.AbstractSlashSubcommand;
 import delilah.client.commands.commandPayloads.AddToDictionnaryPayload;
 import delilah.client.commands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.services.DictionaryService;
@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConsumesPayload(type = AddToDictionnaryPayload.class)
-public class AddToDictionaryCommand extends AbstractSlashCommand {
+public class AddToDictionaryCommand extends AbstractSlashSubcommand {
 
     @Autowired
     DictionaryService dictionaryService;
 
     public AddToDictionaryCommand() {
-        super("dictionary-add-entry", "Add an entry to the specified dictionary.");
+        super("add", "Add an entry to the specified dictionary.");
     }
 
     @Override

@@ -1,19 +1,18 @@
 package delilah.client.commands.dictionary;
 
-import delilah.client.commands.AbstractSlashCommand;
+import delilah.client.commands.AbstractSlashSubcommand;
 import delilah.client.commands.commandPayloads.DictionaryGetEntryCommandPayload;
 import delilah.client.commands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.services.DictionaryService;
 import delilah.services.autocomplete.DictionaryFindEntryAutoCompleteService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConsumesPayload(type = DictionaryGetEntryCommandPayload.class)
-public class RemoveFromDictionaryCommand extends AbstractSlashCommand {
+public class RemoveFromDictionaryCommand extends AbstractSlashSubcommand {
 
     @Autowired
     private DictionaryService dictionaryService;
@@ -22,7 +21,7 @@ public class RemoveFromDictionaryCommand extends AbstractSlashCommand {
     DictionaryFindEntryAutoCompleteService dictionaryFindEntryAutoCompleteService;
 
     public RemoveFromDictionaryCommand() {
-        super("dictionary-remove-entry", "Remove an entry from your personal dictionary.");
+        super("remove", "Remove an entry from your personal dictionary.");
     }
 
     @Override

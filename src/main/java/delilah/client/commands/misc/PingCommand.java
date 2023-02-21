@@ -1,6 +1,7 @@
 package delilah.client.commands.misc;
 
 import delilah.client.commands.AbstractSlashCommand;
+import delilah.client.commands.AbstractSlashSingleCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import java.util.Random;
 import java.util.List;
 
 @Component
-public class PingCommand extends AbstractSlashCommand {
+public class PingCommand extends AbstractSlashSingleCommand {
 
     @Autowired
     private Random random;

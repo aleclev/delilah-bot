@@ -1,5 +1,7 @@
 package delilah.client.commands.payloadProcessing;
 
+import delilah.client.commands.AbstractSlashCommand;
+import delilah.client.commands.AbstractSlashSubcommand;
 import delilah.client.commands.payloadProcessing.annotations.Argument;
 import delilah.client.commands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.infrastructure.repositories.UserRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.List;
 
@@ -20,7 +23,12 @@ public class SlashCommandPayloadExtractor {
     @Autowired
     UserRepository userRepository;
 
-    public Object extractPayload(Class commandClass, Class<Object> payloadClass, SlashCommandInteractionEvent commandEvent) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public Object extractPayload(Class commandClass, List<OptionMapping> optionMapping) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+
+        var payloadAnnotation = (ConsumesPayload)commandClass.getAnnotation(ConsumesPayload.class);
+        if (Objects.isNull(payloadAnnotation)) return null;
+
+        Class payloadClass = payloadAnnotation.type();
 
         ConsumesPayload expectedAnnotation = (ConsumesPayload) commandClass.getAnnotation(ConsumesPayload.class);
 
@@ -32,7 +40,7 @@ public class SlashCommandPayloadExtractor {
 
             String argumentName = getArgumentNameOfField(field);
 
-            Optional<OptionMapping> mapping = getOption(commandEvent.getOptions(), argumentName);
+            Optional<OptionMapping> mapping = getOption(optionMapping, argumentName);
 
             if (mapping.isEmpty()) continue;
 

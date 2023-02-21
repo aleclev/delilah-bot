@@ -1,25 +1,19 @@
 package delilah.client.commands.registration;
 
-import delilah.client.commands.AbstractSlashCommand;
-import delilah.domain.factories.DictionaryFactory;
-import delilah.domain.factories.UserFactory;
-import delilah.domain.models.dictionnary.Dictionary;
-import delilah.domain.models.user.User;
-import delilah.infrastructure.repositories.DictionaryRepository;
-import delilah.infrastructure.repositories.UserRepository;
+import delilah.client.commands.AbstractSlashSubcommand;
 import delilah.services.UserService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RegisterDiscordCommand extends AbstractSlashCommand {
+public class RegisterDiscordCommand extends AbstractSlashSubcommand {
 
     @Autowired
     UserService userService;
 
     public RegisterDiscordCommand() {
-        super("register-discord", "Register your discord profile with Delilah.");
+        super("discord", "Register your discord profile with Delilah.");
     }
 
     @Override

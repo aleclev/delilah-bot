@@ -1,6 +1,9 @@
 package delilah.configuration;
 
 import delilah.client.commands.AbstractSlashCommand;
+import delilah.client.commands.AbstractSlashParentCommand;
+import delilah.client.commands.AbstractSlashSingleCommand;
+import delilah.client.commands.AbstractSlashSubcommand;
 import delilah.client.commands.payloadProcessing.SlashCommandArgumentCreator;
 import delilah.client.discord.EventListener;
 import net.dv8tion.jda.api.JDA;
@@ -25,7 +28,13 @@ public class StartupProcess implements ApplicationListener<ApplicationReadyEvent
     EventListener eventListener;
 
     @Autowired
-    List<AbstractSlashCommand> commands;
+    List<AbstractSlashSingleCommand> commands;
+
+    @Autowired
+    List<AbstractSlashParentCommand> parentCommands;
+
+    @Autowired
+    List<AbstractSlashSubcommand> subcommands;
 
     @Value("${delilah.discord.test-server.id}")
     String testServerId;
@@ -33,7 +42,9 @@ public class StartupProcess implements ApplicationListener<ApplicationReadyEvent
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
 
-        commands.forEach(command -> slashCommandArgumentCreator.populateOptionsMapping(command));
+        subcommands.forEach(command -> command.addOptions(slashCommandArgumentCreator.extractOptions(command.getClass())));
+        commands.forEach(command -> command.addOptions(slashCommandArgumentCreator.extractOptions(command.getClass())));
+        parentCommands.forEach(command -> command.addOptions(slashCommandArgumentCreator.extractOptions(command.getClass())));
 
         jda.addEventListener(eventListener);
 
@@ -49,6 +60,6 @@ public class StartupProcess implements ApplicationListener<ApplicationReadyEvent
 
         Guild testGuild = jda.getGuildById(testServerId);
 
-        testGuild.updateCommands().addCommands(commands).queue();
+        testGuild.updateCommands().addCommands(commands).addCommands(parentCommands).queue();
     }
 }
