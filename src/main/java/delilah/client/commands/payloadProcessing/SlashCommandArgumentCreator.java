@@ -45,7 +45,7 @@ public class SlashCommandArgumentCreator {
 
     private OptionType getOptionTypeFromFieldType(Class fieldType) {
         if (fieldType.equals(String.class)) return OptionType.STRING;
-        else if (fieldType.equals(Integer.class)) return OptionType.NUMBER;
+        else if (fieldType.equals(Integer.class)) return OptionType.INTEGER;
         else if (fieldType.equals(User.class)) return OptionType.USER;
         else throw new IllegalArgumentException(String.format("No suitable OptionType for class %s", fieldType.getName()));
     }

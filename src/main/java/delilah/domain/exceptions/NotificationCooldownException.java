@@ -1,6 +1,6 @@
 package delilah.domain.exceptions;
 
-public class NotificationCooldownException extends AbstractDelilahException {
+public class NotificationCooldownException extends DelilahException {
 
     public NotificationCooldownException(String description) {
         super(description);
