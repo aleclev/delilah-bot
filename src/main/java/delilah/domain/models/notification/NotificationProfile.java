@@ -1,12 +1,14 @@
 package delilah.domain.models.notification;
 
 import delilah.domain.models.user.User;
+import lombok.Getter;
 
 import java.time.Clock;
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 public class NotificationProfile {
 
     private List<NotificationSubscription> subscriptions;

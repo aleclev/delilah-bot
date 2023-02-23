@@ -3,6 +3,8 @@ package delilah.client.interactions.buttons;
 import lombok.Getter;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
+import java.util.concurrent.ExecutionException;
+
 @Getter
 public abstract class AbstractButtonCommand {
 
@@ -12,5 +14,5 @@ public abstract class AbstractButtonCommand {
         this.id = id;
     }
 
-    public abstract void onButtonInteraction(ButtonInteractionEvent event);
+    public abstract void onButtonInteraction(ButtonInteractionEvent event) throws ExecutionException, InterruptedException;
 }

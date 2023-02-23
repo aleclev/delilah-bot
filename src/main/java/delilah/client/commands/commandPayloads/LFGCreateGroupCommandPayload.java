@@ -4,7 +4,7 @@ import delilah.client.commands.payloadProcessing.annotations.Argument;
 
 public class LFGCreateGroupCommandPayload {
 
-    @Argument( description = "The activity for the group.")
+    @Argument( description = "The activity for the group.", autocomplete = true)
     public String activity;
 
     @Argument( description = "Short description for your event.")

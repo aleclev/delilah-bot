@@ -19,6 +19,6 @@ public class LFGLeaveButton extends AbstractButtonCommand {
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
         lfgService.leaveGroup(event.getUser().getId(), event.getMessageId());
-        event.reply("hello").queue();
+        event.reply("Group left").setEphemeral(true).queue();
     }
 }

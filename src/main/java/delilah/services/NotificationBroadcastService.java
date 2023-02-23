@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,7 @@ public class NotificationBroadcastService {
     @Value("${delilah.notification_activity_delay}")
     Integer minimumMinuteDelay;
 
-    public NotificationBroadcastReport broadCastToTagsAsUser(List<String> tags, String message, String discordId, Guild guild, Clock clock, IThreadContainer threadContainer)
+    public NotificationBroadcastReport broadCastToTagsAsUser(List<String> tags, String message, String discordId, Guild guild, Clock clock, String messageUrl)
             throws NotificationCooldownException, ExecutionException, InterruptedException {
         User user = userService.getOrRegisterUserByDiscordId(discordId);
 
@@ -64,9 +65,11 @@ public class NotificationBroadcastService {
             StringBuilder sb = new StringBuilder();
             subscriptions.forEach(sub -> sb.append("#").append(sub.getTag()).append(" "));
             sb.append(": ");
-            String threadUrl = createThreadAndGetUrl(threadContainer, sb.toString());
+
+            //String threadUrl = createThreadAndGetUrl(threadContainer, sb.toString());
             MessageEmbed embed = getEmbed(sb + message, user);
-            List<Button> buttons = getMessageButtons(threadUrl, user);
+            List<Button> buttons = getMessageButtons(messageUrl, user);
+
 
             usersToMessage.removeAll(blockingUsers);
             usersToMessage.retainAll(onlineUsers);
@@ -83,7 +86,7 @@ public class NotificationBroadcastService {
     private List<Button> getMessageButtons(String threadUrl, User sender) {
 
         List<Button> buttonRow = new ArrayList<>();
-        if (!(threadUrl == null || threadUrl.isEmpty())) buttonRow.add(Button.link(threadUrl, "Go to thread"));
+        if (!(threadUrl == null || threadUrl.isEmpty())) buttonRow.add(Button.link(threadUrl, "Go to message"));
         return buttonRow;
     }
 
@@ -122,6 +125,7 @@ public class NotificationBroadcastService {
         EmbedBuilder eb = new EmbedBuilder();
 
         eb.setTitle(title);
+        eb.setDescription("One of your subscribed tags was pinged.");
         eb.addField("Author", String.format("<@%s>", user.getDiscordId()), false);
         eb.setThumbnail(jda.getUserById(user.getDiscordId()).getAvatarUrl());
         return eb.build();

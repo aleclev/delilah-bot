@@ -1,6 +1,6 @@
 package delilah.services.lookingForGroup;
 
-import delilah.domain.lookingForGroup.EventGroup;
+import delilah.domain.models.lookingForGroup.EventGroup;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.stereotype.Component;
 import java.util.List;

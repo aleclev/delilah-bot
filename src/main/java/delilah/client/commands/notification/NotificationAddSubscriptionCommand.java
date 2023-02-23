@@ -1,6 +1,7 @@
 package delilah.client.commands.notification;
 
 import delilah.client.commands.AbstractSlashSingleCommand;
+import delilah.client.commands.AbstractSlashSubcommand;
 import delilah.client.commands.commandPayloads.NotificationAddSubscriptionCommandPayload;
 import delilah.client.commands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.services.NotificationSubscriptionService;
@@ -10,13 +11,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConsumesPayload(type = NotificationAddSubscriptionCommandPayload.class)
-public class NotificationAddSubscriptionCommand extends AbstractSlashSingleCommand {
+public class NotificationAddSubscriptionCommand extends AbstractSlashSubcommand {
 
     @Autowired
     NotificationSubscriptionService notificationSubscriptionService;
 
     public NotificationAddSubscriptionCommand() {
-        super("notification-add", "Add a tag to your subscription list.");
+        super("add", "Add a tag to your subscription list.");
     }
 
     @Override

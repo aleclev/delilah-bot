@@ -1,6 +1,6 @@
 package delilah.infrastructure.repositories.ram;
 
-import delilah.domain.lookingForGroup.EventGroup;
+import delilah.domain.models.lookingForGroup.EventGroup;
 import delilah.infrastructure.repositories.EventGroupRepository;
 import org.springframework.stereotype.Component;
 

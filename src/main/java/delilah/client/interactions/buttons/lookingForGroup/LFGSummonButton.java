@@ -7,18 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LFGJoinButton extends AbstractButtonCommand {
+public class LFGSummonButton extends AbstractButtonCommand {
 
     @Autowired
     private LookingForGroupService lfgService;
 
-    public LFGJoinButton() {
-        super("lfg_join");
+    public LFGSummonButton() {
+        super("lfg_summon");
     }
 
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        lfgService.joinGroup(event.getUser().getId(), event.getMessageId());
-        event.reply("Group joined.").setEphemeral(true).queue();
+        event.deferReply(true).queue();
+        lfgService.summonGroup(event.getUser().getId(), event.getMessageId());
+
+        event.getHook().sendMessage("Members summoned.").setEphemeral(true).queue();
     }
 }

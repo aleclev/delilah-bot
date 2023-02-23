@@ -1,6 +1,7 @@
-package delilah.domain.lookingForGroup;
+package delilah.domain.models.lookingForGroup;
 
 import delilah.domain.exceptions.LookingForGroupException;
+import delilah.infrastructure.repositories.ActivityRepository;
 import lombok.Getter;
 
 import java.util.List;
@@ -11,16 +12,16 @@ public class EventGroup {
     private String id;
     private String ownerId;
 
-    private String title;
+    private Activity activity;
     private String description;
     private List<String> participantsIds;
     private List<String> reserveIds;
     private Integer maxSize;
 
-    public EventGroup(String id, String ownderId, String title, String description, List<String> participantsIds, List<String> reserveIds, Integer maxSize) {
+    public EventGroup(String id, String ownderId, Activity activity, String description, List<String> participantsIds, List<String> reserveIds, Integer maxSize) {
         this.id = id;
+        this.activity = activity;
         this.ownerId = ownderId;
-        this.title = title;
         this.description = description;
         this.participantsIds = participantsIds;
         this.reserveIds = reserveIds;
@@ -39,7 +40,7 @@ public class EventGroup {
 
     public void joinGroupAsReserve(String discordId) {
 
-        if (participantsIds.contains(discordId)) throw new LookingForGroupException("You are already in this group.");
+        if (participantsIds.contains(discordId) || reserveIds.contains(discordId)) throw new LookingForGroupException("You are already in this group.");
 
         participantsIds.remove(discordId);
         reserveIds.add(discordId);
@@ -66,5 +67,9 @@ public class EventGroup {
 
     public String getId() {
         return id;
+    }
+
+    public String getTitle() {
+        return activity.getLongName();
     }
 }

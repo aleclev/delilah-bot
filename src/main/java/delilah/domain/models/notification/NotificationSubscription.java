@@ -13,10 +13,6 @@ public class NotificationSubscription {
         this.tag = tag;
     }
 
-    public boolean isTag(String tag2) {
-        return tag.equals(tag2);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
