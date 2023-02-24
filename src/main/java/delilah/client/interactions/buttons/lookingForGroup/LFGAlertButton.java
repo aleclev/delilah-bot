@@ -25,8 +25,10 @@ public class LFGAlertButton extends AbstractButtonCommand {
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) throws ExecutionException, InterruptedException {
 
+        event.deferReply(true).queue();
+
         var report = lfgService.sendAlert(event.getUser().getId(), event.getMessageId(), event.getMessage().getJumpUrl());
 
-        event.reply(report.toString()).setEphemeral(true).queue();
+        event.getHook().sendMessage(report.toString()).setEphemeral(true).queue();
     }
 }

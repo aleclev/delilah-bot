@@ -6,12 +6,15 @@ import delilah.domain.models.notification.NotificationProfile;
 import delilah.domain.models.notification.NotificationSubscription;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Clock;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Document()
 public class User {
 
     @Id
@@ -19,16 +22,15 @@ public class User {
 
     String userId;
 
-    List<Dictionary> dictionaries;
+    ArrayList<Dictionary> dictionaries;
 
     NotificationProfile notificationProfile;
 
     Dictionary rootDictionary;
 
-    public User(String discordId, String userId, List<Dictionary> dictionaries, Dictionary rootDictionary, NotificationProfile notificationProfile) {
+    public User(String discordId, String userId, Dictionary rootDictionary, NotificationProfile notificationProfile) {
         this.discordId = discordId;
         this.userId = userId;
-        this.dictionaries = dictionaries;
         this.rootDictionary = rootDictionary;
         this.notificationProfile = notificationProfile;
     }
@@ -49,12 +51,6 @@ public class User {
         return notificationProfile.addSubscription(subscription);
     }
 
-    public void addDictionary(Dictionary dictionary) {
-        if (dictionaries.size() >= 10) return;
-
-        dictionaries.add(dictionary);
-    }
-
     public boolean isAllowedToBroadcast(Duration minimumDelay, Clock clock) {
         return !notificationProfile.isOnBroadcastCooldown(minimumDelay, clock);
     }
@@ -64,9 +60,6 @@ public class User {
     }
     private User() {}
 
-    public Dictionary getDictionaryById(String id) {
-        return dictionaries.stream().filter(d -> d.getDictionaryId().equals(id)).findFirst().get();
-    }
 
     public boolean removeNotificationSubscription(NotificationSubscription subscription) {
         return notificationProfile.removeSubscription(subscription);

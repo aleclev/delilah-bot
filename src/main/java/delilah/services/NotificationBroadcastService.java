@@ -95,7 +95,12 @@ public class NotificationBroadcastService {
     }
 
     private boolean userWithIdIsOnline(String discordId, Guild guild) {
-        OnlineStatus status = guild.getMemberById(discordId).getOnlineStatus(); //TODO : potentially problematic...
+        OnlineStatus status = null;
+        try {
+            status = Objects.requireNonNull(guild.getMemberById(discordId)).getOnlineStatus(); //TODO : potentially problematic...
+        } catch (Exception e) {
+            return false;
+        }
         return !(status.equals(OnlineStatus.OFFLINE) || status.equals(OnlineStatus.DO_NOT_DISTURB));
     }
 

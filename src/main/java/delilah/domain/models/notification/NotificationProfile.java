@@ -5,17 +5,18 @@ import lombok.Getter;
 
 import java.time.Clock;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 public class NotificationProfile {
 
-    private List<NotificationSubscription> subscriptions;
+    private ArrayList<NotificationSubscription> subscriptions;
     private NotificationActivityLog notificationActivityLog;
-    private List<String> blockedUsersDiscordIds;
+    private ArrayList<String> blockedUsersDiscordIds;
 
-    public NotificationProfile(List<NotificationSubscription> subscriptions, NotificationActivityLog notificationActivityLog, List<String> blockedUsersDiscordIds) {
+    public NotificationProfile(ArrayList<NotificationSubscription> subscriptions, NotificationActivityLog notificationActivityLog, ArrayList<String> blockedUsersDiscordIds) {
         this.subscriptions = subscriptions;
         this.notificationActivityLog = notificationActivityLog;
         this.blockedUsersDiscordIds = blockedUsersDiscordIds;

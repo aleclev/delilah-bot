@@ -15,6 +15,6 @@ public class UserFactory {
     public User createUser(String discordId, Dictionary dictionary) {
         String userId = UUID.randomUUID().toString();
 
-        return new User(discordId, userId, new ArrayList<>(), dictionary, new NotificationProfile(new ArrayList<>(), new NotificationActivityLog(), new ArrayList<>()));
+        return new User(discordId, userId, dictionary, new NotificationProfile(new ArrayList<>(), new NotificationActivityLog(), new ArrayList<>()));
     }
 }

@@ -23,6 +23,7 @@ public class DictionaryFindEntryAutoCompleteService implements AutoCompleteServi
 
         return dictionaryService.getEntriesLikeInputForUser(discordId, userInput).stream()
                 .map(k -> new Command.Choice(k.getWord().toString(), k.getWord().toString()))
+                .limit(25)
                 .collect(Collectors.toList());
     }
 }

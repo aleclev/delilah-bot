@@ -3,6 +3,8 @@ package delilah.domain.models.dictionnary;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,9 +15,9 @@ public class Dictionary {
     @Id
     String dictionaryId;
 
-    List<DictionaryEntry> entries;
+    ArrayList<DictionaryEntry> entries;
 
-    public Dictionary(String dictionaryId, List<DictionaryEntry> entries) {
+    public Dictionary(String dictionaryId, ArrayList<DictionaryEntry> entries) {
         this.dictionaryId = dictionaryId;
         this.entries = entries;
     }

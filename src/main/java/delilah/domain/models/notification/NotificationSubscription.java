@@ -18,7 +18,7 @@ public class NotificationSubscription {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NotificationSubscription that = (NotificationSubscription) o;
-        return Objects.equals(tag, that.tag);
+        return Objects.equals(tag.toLowerCase(), that.tag.toLowerCase());
     }
 
     @Override

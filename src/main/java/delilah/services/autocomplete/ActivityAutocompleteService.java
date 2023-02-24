@@ -17,6 +17,11 @@ public class ActivityAutocompleteService implements AutoCompleteService {
 
     @Override
     public List<Command.Choice> getSuggestions(CommandAutoCompleteInteraction event) {
-        return activityRepository.searchByName(event.getFocusedOption().getValue()).stream().map(a -> new Command.Choice(a.getLongName(), a.getShortName())).collect(Collectors.toList());
+        return activityRepository
+                .searchByName(event.getFocusedOption().getValue())
+                .stream()
+                .map(a -> new Command.Choice(a.getLongName(), a.getShortName()))
+                .limit(25)
+                .collect(Collectors.toList());
     }
 }
