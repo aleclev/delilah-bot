@@ -8,6 +8,7 @@ import delilah.domain.models.notification.NotificationBroadcastReport;
 import delilah.infrastructure.repositories.ActivityRepository;
 import delilah.infrastructure.repositories.EventGroupRepository;
 import delilah.services.NotificationBroadcastService;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -20,14 +21,11 @@ import org.springframework.stereotype.Component;
 import java.time.Clock;
 import java.util.Collection;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 @Component
 public class LookingForGroupService {
-
-    private HashMap<String, String> messageIdToGroupId = new HashMap<>();
     @Autowired
     private EventGroupFactory eventGroupFactory;
 
@@ -58,37 +56,39 @@ public class LookingForGroupService {
 
         if (Objects.isNull(activity)) activity = new Activity("", title);
 
-        EventGroup group = eventGroupFactory.createEventGroup(ownerId, activity, description, maxSize);
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Preparing group");
 
-        GroupEventEmbedBuilder builder = new GroupEventEmbedBuilder();
-        builder.fromEventGroup(group);
+        var message = (getLfgChannel()).sendMessageEmbeds(eb.build()).addActionRow(getActionRow1()).addActionRow(getActionRow2())
+                .mapToResult().submit().get().get();
+
+        EventGroup group = eventGroupFactory.createEventGroup(message.getId(), ownerId, activity, description, maxSize);
 
         this.eventGroupRepository.save(group);
 
-        var message = (getLfgChannel()).sendMessageEmbeds(builder.build()).addActionRow(getActionRow1()).addActionRow(getActionRow2())
-                .mapToResult().submit().get().get();
-
-        messageIdToGroupId.put(message.getId(), group.getId());
+        updateEmbed(message.getId(), group);
 
         return message.getJumpUrl();
     }
 
     public void joinGroup(String discordId, String messageId) {
 
-        String groupId = messageIdToGroupId.get(messageId);
-        EventGroup group = eventGroupRepository.findById(groupId);
+        EventGroup group = eventGroupRepository.findById(messageId);
 
         group.joinGroup(discordId);
+        group.logActivityAtTime(clock.instant());
+        eventGroupRepository.save(group);
 
         updateEmbed(messageId, group);
     }
 
     public void joinGroupAlternate(String discordId, String messageId) {
 
-        String groupId = messageIdToGroupId.get(messageId);
-        EventGroup group = eventGroupRepository.findById(groupId);
+        EventGroup group = eventGroupRepository.findById(messageId);
 
         group.joinGroupAsReserve(discordId);
+        group.logActivityAtTime(clock.instant());
+        eventGroupRepository.save(group);
 
         updateEmbed(messageId, group);
     }
@@ -102,14 +102,15 @@ public class LookingForGroupService {
         String messageUrl = getLfgChannel().getJumpUrl() + "/" + messageId;
 
         lfgSummonService.summonGroup(group, messageUrl);
+
+        group.logActivityAtTime(clock.instant());
+        eventGroupRepository.save(group);
+        updateEmbed(messageId, group);
     }
 
     private EventGroup getGroupByMessageId(String messageId) {
-        String groupId = messageIdToGroupId.get(messageId);
 
-        if (Objects.isNull(groupId)) throw new LookingForGroupException("This group is inactive");
-
-        EventGroup group = eventGroupRepository.findById(groupId);
+        EventGroup group = eventGroupRepository.findById(messageId);
 
         if (Objects.isNull(group)) throw new LookingForGroupException("Error finding event.");
 
@@ -118,11 +119,12 @@ public class LookingForGroupService {
 
     public void leaveGroup(String discordId, String messageId) {
 
-        String groupId = messageIdToGroupId.get(messageId);
-        EventGroup group = eventGroupRepository.findById(groupId);
+        EventGroup group = eventGroupRepository.findById(messageId);
 
         group.leaveGroup(discordId);
 
+        group.logActivityAtTime(clock.instant());
+        eventGroupRepository.save(group);
         updateEmbed(messageId, group);
     }
 

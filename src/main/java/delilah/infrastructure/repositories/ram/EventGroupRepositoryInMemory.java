@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class EventGroupRepositoryInMemory implements EventGroupRepository {
 
     private List<EventGroup> eventGroups = new ArrayList<>();
