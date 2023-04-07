@@ -1,6 +1,5 @@
 package delilah.services.autocomplete;
 
-import delilah.client.commands.payloadProcessing.annotations.Argument;
 import delilah.services.DictionaryService;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;

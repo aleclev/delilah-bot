@@ -1,14 +1,18 @@
 package delilah.domain.models.lookingForGroup;
 
 import delilah.domain.exceptions.LookingForGroupException;
-import delilah.infrastructure.repositories.ActivityRepository;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.util.List;
 
 @Getter
+@Document
 public class EventGroup {
 
+    @Id
     private String id;
     private String ownerId;
 
@@ -18,14 +22,17 @@ public class EventGroup {
     private List<String> reserveIds;
     private Integer maxSize;
 
-    public EventGroup(String id, String ownderId, Activity activity, String description, List<String> participantsIds, List<String> reserveIds, Integer maxSize) {
+    private Instant lastActivity;
+
+    public EventGroup(String id, String ownerId, Activity activity, String description, List<String> participantsIds, List<String> reserveIds, Integer maxSize, Instant lastActivity) {
         this.id = id;
         this.activity = activity;
-        this.ownerId = ownderId;
+        this.ownerId = ownerId;
         this.description = description;
         this.participantsIds = participantsIds;
         this.reserveIds = reserveIds;
         this.maxSize = maxSize;
+        this.lastActivity = lastActivity;
     }
 
     public void joinGroup(String discordId) {
@@ -50,6 +57,11 @@ public class EventGroup {
 
         participantsIds.remove(discordId);
         reserveIds.remove(discordId);
+    }
+
+    public void logActivityAtTime(Instant instant) {
+
+        lastActivity = instant;
     }
 
     public boolean userWithIdInParticipants(String discordId) {

@@ -1,6 +1,6 @@
 package delilah.client.interactions.buttons.lookingForGroup;
 
-import delilah.client.commands.notification.NotificationBroadcastCommand;
+import delilah.client.interactions.slashCommands.notification.NotificationBroadcastCommand;
 import delilah.client.interactions.buttons.AbstractButtonCommand;
 import delilah.services.lookingForGroup.LookingForGroupService;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;

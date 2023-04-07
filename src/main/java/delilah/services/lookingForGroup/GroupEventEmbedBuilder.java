@@ -23,7 +23,14 @@ public class GroupEventEmbedBuilder extends EmbedBuilder {
                 "Reserve",
                 discordIdsAsMentions(eventGroup.getReserveIds()),
                 false
-                );
+                )
+
+                .addField(
+                        "Owner",
+                        String.format("<@%s>", eventGroup.getOwnerId()),
+                        false
+                )
+                .setTimestamp(eventGroup.getLastActivity());
 
         return this;
     }
