@@ -15,4 +15,9 @@ public abstract class MongoRepositoryImpl<T, ID> implements Repository<T> {
     public void save(T object) {
         mongoTemplate.save(object);
     }
+
+    @Override
+    public void delete(T object) {
+        mongoTemplate.remove(object);
+    }
 }
