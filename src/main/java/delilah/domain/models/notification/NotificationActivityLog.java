@@ -19,4 +19,8 @@ public class NotificationActivityLog {
     public Duration timeElapsedSinceLastActivity(Clock clock) {
         return Objects.isNull(lastActivity) ? Duration.ofDays(999999) : Duration.between(lastActivity, Instant.now(clock));
     }
+
+    public Instant getLastActivity() {
+        return lastActivity;
+    }
 }
