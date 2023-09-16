@@ -5,6 +5,8 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
@@ -62,6 +64,11 @@ public class EventGroup {
     public void logActivityAtTime(Instant instant) {
 
         lastActivity = instant;
+    }
+
+    public Duration timeSinceLastActivity(Clock clock) {
+
+        return Duration.between(lastActivity, clock.instant());
     }
 
     public boolean userWithIdInParticipants(String discordId) {

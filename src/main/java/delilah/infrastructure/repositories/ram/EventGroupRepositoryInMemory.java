@@ -22,6 +22,11 @@ public class EventGroupRepositoryInMemory implements EventGroupRepository {
     }
 
     @Override
+    public void delete(EventGroup object) {
+
+    }
+
+    @Override
     public List<EventGroup> findAll() {
         return null;
     }
