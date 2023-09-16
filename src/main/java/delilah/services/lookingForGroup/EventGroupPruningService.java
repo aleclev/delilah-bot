@@ -31,7 +31,7 @@ public class EventGroupPruningService {
         this.jda = jda;
     }
 
-    @Scheduled(fixedDelay = 30_000)
+    @Scheduled(fixedDelay = 60_000)
     public void pruneInactiveEventGroups() {
         List<EventGroup> groups = eventGroupRepository.findAll();
 
