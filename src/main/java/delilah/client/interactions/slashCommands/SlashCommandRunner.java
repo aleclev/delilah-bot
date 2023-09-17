@@ -28,16 +28,24 @@ public class SlashCommandRunner implements Runnable {
             command.getClass().getMethod("execute", SlashCommandInteractionEvent.class, Object.class).invoke(command, commandEvent, payload);
 
         } catch (DelilahException e) {
-            commandEvent.reply(e.getMessage()).queue();
+            notifyUserOfException(e.getMessage());
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof DelilahException)
-                commandEvent.getHook().sendMessage(e.getTargetException().getMessage()).queue();
+                notifyUserOfException(e.getTargetException().getMessage());
             else
-                commandEvent.getHook().sendMessage("An unknown error occurred !").queue();
+                notifyUserOfException("An unknown error occurred !");
             e.printStackTrace();
         } catch (Exception e) {
-            commandEvent.getHook().sendMessage("An unknown error occurred !").queue();
+            notifyUserOfException("An unknown error occurred !");
             e.printStackTrace();
         }
+    }
+
+    private void notifyUserOfException(String message) {
+
+        if (commandEvent.isAcknowledged())
+            commandEvent.getHook().sendMessage(message).setEphemeral(true).queue();
+        else
+            commandEvent.reply(message).setEphemeral(true).queue();
     }
 }

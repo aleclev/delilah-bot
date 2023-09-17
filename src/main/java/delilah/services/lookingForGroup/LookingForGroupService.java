@@ -1,5 +1,6 @@
 package delilah.services.lookingForGroup;
 
+import delilah.domain.exceptions.DelilahException;
 import delilah.domain.exceptions.LookingForGroupException;
 import delilah.domain.factories.EventGroupFactory;
 import delilah.domain.models.lookingForGroup.Activity;
@@ -54,7 +55,7 @@ public class LookingForGroupService {
 
         Activity activity = activityRepository.findById(title);
 
-        if (Objects.isNull(activity)) activity = new Activity("", title);
+        if (Objects.isNull(activity)) throw new DelilahException("Invalid activity name!");
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Preparing group");
@@ -168,7 +169,8 @@ public class LookingForGroupService {
 
         return List.of(
                 Button.primary("lfg_summon", "Summon Group"),
-                Button.primary("lfg_alert", "Alert")
+                Button.primary("lfg_alert", "Alert"),
+                Button.danger("lfg_delete", "Delete")
         );
     }
 }

@@ -19,6 +19,6 @@ public class LFGJoinButton extends AbstractButtonCommand {
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
         lfgService.joinGroup(event.getUser().getId(), event.getMessageId());
-        event.reply("Group joined.").setEphemeral(true).queue();
+        event.getHook().sendMessage("Group joined.").setEphemeral(true).queue();
     }
 }

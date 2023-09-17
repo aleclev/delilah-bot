@@ -1,5 +1,6 @@
 package delilah.services.lookingForGroup;
 
+import delilah.domain.exceptions.DelilahException;
 import delilah.domain.models.lookingForGroup.EventGroup;
 import delilah.infrastructure.repositories.EventGroupRepository;
 import net.dv8tion.jda.api.JDA;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class EventGroupPruningService {
@@ -54,5 +56,15 @@ public class EventGroupPruningService {
     private void deleteDiscordEventGroupMessage(String messageId) {
         TextChannel lfgChannel = (TextChannel) jda.getGuildChannelById(ChannelType.TEXT, lfgChannelId);
         lfgChannel.deleteMessageById(messageId).queue();
+    }
+
+    public void deleteGroupAs(String userId, String groupId) {
+        EventGroup eventGroup = eventGroupRepository.findById(groupId);
+
+        if (Objects.isNull(eventGroup)) throw new DelilahException("Error while fetching group!");
+
+        if (!eventGroup.getOwnerId().equals(userId)) throw new DelilahException("Only the group owner can delete a group.");
+
+        this.deleteGroup(eventGroup);
     }
 }

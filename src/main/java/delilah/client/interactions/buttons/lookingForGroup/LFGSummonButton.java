@@ -18,7 +18,7 @@ public class LFGSummonButton extends AbstractButtonCommand {
 
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        event.deferReply(true).queue();
+
         lfgService.summonGroup(event.getUser().getId(), event.getMessageId());
 
         event.getHook().sendMessage("Members summoned.").setEphemeral(true).queue();

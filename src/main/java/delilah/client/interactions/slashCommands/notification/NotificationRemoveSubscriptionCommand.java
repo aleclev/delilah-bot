@@ -4,8 +4,9 @@ import delilah.client.interactions.slashCommands.commandPayloads.NotificationAdd
 import delilah.client.interactions.slashCommands.AbstractSlashSubcommand;
 import delilah.client.interactions.slashCommands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.services.NotificationSubscriptionService;
+import delilah.services.autocomplete.RemoveActivityAutocompleteService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.springframework.beans.factory.annotation.Autowired;
+import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import org.springframework.stereotype.Component;
 
 
@@ -13,11 +14,14 @@ import org.springframework.stereotype.Component;
 @ConsumesPayload(type = NotificationAddSubscriptionCommandPayload.class)
 public class NotificationRemoveSubscriptionCommand extends AbstractSlashSubcommand {
 
-    @Autowired
-    NotificationSubscriptionService notificationSubscriptionService;
+    private final NotificationSubscriptionService notificationSubscriptionService;
+    private final RemoveActivityAutocompleteService removeActivityAutocompleteService;
 
-    public NotificationRemoveSubscriptionCommand() {
+
+    public NotificationRemoveSubscriptionCommand(NotificationSubscriptionService notificationSubscriptionService, RemoveActivityAutocompleteService removeActivityAutocompleteService) {
         super("remove", "Remove a tag from your notifications.");
+        this.notificationSubscriptionService = notificationSubscriptionService;
+        this.removeActivityAutocompleteService = removeActivityAutocompleteService;
     }
 
     @Override
@@ -29,5 +33,10 @@ public class NotificationRemoveSubscriptionCommand extends AbstractSlashSubcomma
         else
             commandEvent.reply("Tag already add to subscriptions.").queue();
 
+    }
+
+    @Override
+    public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteraction event) {
+        event.replyChoices(removeActivityAutocompleteService.getSuggestions(event)).queue();
     }
 }
