@@ -16,12 +16,21 @@ public class ButtonEventHandler {
     public void onButtonInteraction(ButtonInteractionEvent event) {
 
         try {
+            event.deferReply(true).queue();
             getButton(event.getButton().getId()).onButtonInteraction(event);
         } catch (DelilahException e) {
-            event.reply(e.getMessage()).setEphemeral(true).queue();
+            notifyUserOfException(e.getMessage(), event);
         } catch (Exception e) {
-            event.reply("An unknown error occurred.").setEphemeral(true).queue();
+            notifyUserOfException("An unknown error occurred!", event);
         }
+    }
+
+    private void notifyUserOfException(String message, ButtonInteractionEvent event) {
+
+        if (event.isAcknowledged())
+            event.getHook().sendMessage(message).setEphemeral(true).queue();
+        else
+            event.reply(message).setEphemeral(true).queue();
     }
 
     private AbstractButtonCommand getButton(String buttonId) {
