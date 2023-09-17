@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ActivityAutocompleteService implements AutoCompleteService {
+public class AddActivityAutocompleteService implements AutoCompleteService {
 
     @Autowired
     private ActivityRepository activityRepository;
@@ -24,4 +24,6 @@ public class ActivityAutocompleteService implements AutoCompleteService {
                 .limit(25)
                 .collect(Collectors.toList());
     }
+
+
 }

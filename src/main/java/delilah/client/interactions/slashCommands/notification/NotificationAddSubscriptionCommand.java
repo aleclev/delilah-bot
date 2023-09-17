@@ -4,19 +4,22 @@ import delilah.client.interactions.slashCommands.commandPayloads.NotificationAdd
 import delilah.client.interactions.slashCommands.AbstractSlashSubcommand;
 import delilah.client.interactions.slashCommands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.services.NotificationSubscriptionService;
+import delilah.services.autocomplete.AddActivityAutocompleteService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.springframework.beans.factory.annotation.Autowired;
+import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConsumesPayload(type = NotificationAddSubscriptionCommandPayload.class)
 public class NotificationAddSubscriptionCommand extends AbstractSlashSubcommand {
 
-    @Autowired
-    NotificationSubscriptionService notificationSubscriptionService;
+    private final NotificationSubscriptionService notificationSubscriptionService;
+    private final AddActivityAutocompleteService addActivityAutocompleteService;
 
-    public NotificationAddSubscriptionCommand() {
+    public NotificationAddSubscriptionCommand(NotificationSubscriptionService notificationSubscriptionService, AddActivityAutocompleteService addActivityAutocompleteService) {
         super("add", "Add a tag to your subscription list.");
+        this.notificationSubscriptionService = notificationSubscriptionService;
+        this.addActivityAutocompleteService = addActivityAutocompleteService;
     }
 
     @Override
@@ -27,5 +30,10 @@ public class NotificationAddSubscriptionCommand extends AbstractSlashSubcommand 
             commandEvent.reply("Tag added to subscriptions!").queue();
         else
             commandEvent.reply("Tag already add to subscriptions.").queue();
+    }
+
+    @Override
+    public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteraction event) {
+        event.replyChoices(addActivityAutocompleteService.getSuggestions(event)).queue();
     }
 }
