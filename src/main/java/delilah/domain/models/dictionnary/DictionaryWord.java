@@ -1,5 +1,8 @@
 package delilah.domain.models.dictionnary;
 
+import lombok.Getter;
+
+@Getter
 public class DictionaryWord {
 
     private final String word;

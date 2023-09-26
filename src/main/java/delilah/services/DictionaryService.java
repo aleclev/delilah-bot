@@ -1,5 +1,6 @@
 package delilah.services;
 
+import delilah.domain.models.dictionnary.Dictionary;
 import delilah.domain.models.dictionnary.DictionaryDefinition;
 import delilah.domain.models.dictionnary.DictionaryEntry;
 import delilah.domain.models.dictionnary.DictionaryWord;
@@ -56,5 +57,11 @@ public class DictionaryService {
 
         DictionaryWord compareWord = new DictionaryWord(input);
         return user.getRootDictionary().findEntriesSimilarTo(compareWord);
+    }
+
+    public Dictionary getDictionaryForUser(String userDiscordId) {
+        User user = userRepository.findByDiscordId(userDiscordId);
+
+        return user.getRootDictionary();
     }
 }
