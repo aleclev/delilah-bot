@@ -4,6 +4,6 @@ import delilah.client.interactions.slashCommands.payloadProcessing.annotations.A
 
 public class NotificationAddSubscriptionCommandPayload {
 
-    @Argument(description = "The tag to add to your subscriptions.")
+    @Argument(description = "The tag to add to your subscriptions.", autocomplete = true)
     public String tag;
 }

@@ -3,7 +3,7 @@ package delilah.client.interactions.slashCommands.lookingForGroup;
 import delilah.client.interactions.slashCommands.commandPayloads.LFGCreateGroupCommandPayload;
 import delilah.client.interactions.slashCommands.AbstractSlashSubcommand;
 import delilah.client.interactions.slashCommands.payloadProcessing.annotations.ConsumesPayload;
-import delilah.services.autocomplete.ActivityAutocompleteService;
+import delilah.services.autocomplete.AddActivityAutocompleteService;
 import delilah.services.lookingForGroup.LookingForGroupService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
@@ -20,7 +20,7 @@ public class LFGCreateGroupCommand extends AbstractSlashSubcommand {
     private LookingForGroupService lfgService;
 
     @Autowired
-    private ActivityAutocompleteService activityAutocompleteService;
+    private AddActivityAutocompleteService addActivityAutocompleteService;
 
     public LFGCreateGroupCommand() {
         super("create", "Create an event group.");
@@ -40,6 +40,6 @@ public class LFGCreateGroupCommand extends AbstractSlashSubcommand {
     @Override
     public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteraction event) {
 
-        event.replyChoices(activityAutocompleteService.getSuggestions(event)).queue();
+        event.replyChoices(addActivityAutocompleteService.getSuggestions(event)).queue();
     }
 }
