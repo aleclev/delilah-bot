@@ -13,6 +13,7 @@ import delilah.domain.exceptions.NotificationCooldownException;
 import delilah.domain.models.notification.NotificationBroadcastReport;
 import delilah.domain.models.notification.NotificationSubscription;
 import delilah.domain.models.user.User;
+import delilah.infrastructure.repositories.ActivityRepository;
 import delilah.infrastructure.repositories.UserRepository;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -34,6 +35,9 @@ public class NotificationBroadcastService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ActivityRepository activityRepository;
 
     @Autowired
     JDA jda;
@@ -62,12 +66,8 @@ public class NotificationBroadcastService {
 
         if (!subscribedUsers.isEmpty()) {
 
-            StringBuilder sb = new StringBuilder();
-            subscriptions.forEach(sub -> sb.append("#").append(sub.getTag()).append(" "));
-            sb.append(": ");
-
-            //String threadUrl = createThreadAndGetUrl(threadContainer, sb.toString());
-            MessageEmbed embed = getEmbed(sb + message, user);
+            String title = activityRepository.findById(tags.get(tags.size() - 1)).getLongName() + ": " + message;
+            MessageEmbed embed = getEmbed(title, user);
             List<Button> buttons = getMessageButtons(messageUrl, user);
 
 
