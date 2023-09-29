@@ -138,7 +138,7 @@ public class GroupEventService {
         if (!discordId.equals(group.getOwnerId())) throw new LookingForGroupException("Only the group owner can send alerts.");
 
         return broadcastService.broadCastToTagsAsUser(
-                List.of(group.getActivity().getShortName()),
+                group.getActivity().getAllRelatedActivities(),
                 group.getDescription(),
                 discordId,
                 getLfgChannel().getGuild(),
