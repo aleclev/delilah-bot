@@ -1,6 +1,6 @@
-package delilah.services.lookingForGroup;
+package delilah.services.groupEvent;
 
-import delilah.domain.models.lookingForGroup.EventGroup;
+import delilah.domain.models.groupEvent.GroupEvent;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class LFGSummonService {
+public class GroupEventSummonService {
 
     @Autowired
     private JDA jda;
@@ -19,7 +19,7 @@ public class LFGSummonService {
     @Value("${delilah.discord.test-server.id}")
     private String testGuildId;
 
-    public void summonGroup(EventGroup group, String messageUrl) {
+    public void summonGroup(GroupEvent group, String messageUrl) {
 
         String vcUrl = null;
 

@@ -1,7 +1,7 @@
 package delilah.infrastructure.repositories;
 
-import delilah.domain.models.lookingForGroup.EventGroup;
+import delilah.domain.models.groupEvent.GroupEvent;
 
-public interface EventGroupRepository extends Repository<EventGroup> {
+public interface EventGroupRepository extends Repository<GroupEvent> {
 
 }

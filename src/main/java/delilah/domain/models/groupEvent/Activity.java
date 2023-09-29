@@ -1,4 +1,4 @@
-package delilah.domain.models.lookingForGroup;
+package delilah.domain.models.groupEvent;
 
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
