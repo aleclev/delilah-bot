@@ -1,36 +1,55 @@
 package delilah.client.interactions.slashCommands.lookingForGroup;
 
-import delilah.client.interactions.slashCommands.commandPayloads.LFGCreateGroupCommandPayload;
+import delilah.client.interactions.slashCommands.commandPayloads.GroupEventCreateCommandPayload;
 import delilah.client.interactions.slashCommands.AbstractSlashSubcommand;
 import delilah.client.interactions.slashCommands.payloadProcessing.annotations.ConsumesPayload;
+import delilah.domain.exceptions.DelilahException;
 import delilah.services.autocomplete.AddActivityAutocompleteService;
-import delilah.services.lookingForGroup.LookingForGroupService;
+import delilah.services.groupEvent.GroupEventService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 @Component
-@ConsumesPayload(type = LFGCreateGroupCommandPayload.class)
+@ConsumesPayload(type = GroupEventCreateCommandPayload.class)
 public class LFGCreateGroupCommand extends AbstractSlashSubcommand {
 
-    @Autowired
-    private LookingForGroupService lfgService;
+    private final GroupEventService lfgService;
+    private final AddActivityAutocompleteService addActivityAutocompleteService;
+    private final Clock clock;
 
-    @Autowired
-    private AddActivityAutocompleteService addActivityAutocompleteService;
 
-    public LFGCreateGroupCommand() {
+    public LFGCreateGroupCommand(GroupEventService lfgService, AddActivityAutocompleteService addActivityAutocompleteService, Clock clock) {
         super("create", "Create an event group.");
+        this.lfgService = lfgService;
+        this.addActivityAutocompleteService = addActivityAutocompleteService;
+        this.clock = clock;
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent commandEvent, Object payload) throws ExecutionException, InterruptedException {
-        var p = (LFGCreateGroupCommandPayload)payload;
+        var p = (GroupEventCreateCommandPayload)payload;
 
-        String messageUrl = lfgService.createEventGroup(commandEvent.getUser().getId(), p.activity, p.description, p.maxSize);
+        Instant startTime = clock.instant();
+
+        if (Objects.nonNull(p.startTime)) {
+            try {
+                startTime = Instant.parse(p.startTime);
+            }
+            catch (Exception e) {
+                throw new DelilahException("Could not parse the given datetime.");
+            }
+        }
+
+        String messageUrl = lfgService.createEventGroup(commandEvent.getUser().getId(), p.activity, p.description, p.maxSize, startTime);
 
         commandEvent.reply(
                 String.format("Group created: %s\nClick `Summon Group` to message members.\nClick `Alert` to notify users who are subscribed to your alerts from you activity.", messageUrl))

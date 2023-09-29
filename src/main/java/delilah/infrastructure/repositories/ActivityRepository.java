@@ -1,6 +1,6 @@
 package delilah.infrastructure.repositories;
 
-import delilah.domain.models.lookingForGroup.Activity;
+import delilah.domain.models.groupEvent.Activity;
 
 import java.util.List;
 

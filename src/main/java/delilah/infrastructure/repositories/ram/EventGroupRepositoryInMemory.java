@@ -1,33 +1,32 @@
 package delilah.infrastructure.repositories.ram;
 
-import delilah.domain.models.lookingForGroup.EventGroup;
+import delilah.domain.models.groupEvent.GroupEvent;
 import delilah.infrastructure.repositories.EventGroupRepository;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EventGroupRepositoryInMemory implements EventGroupRepository {
 
-    private List<EventGroup> eventGroups = new ArrayList<>();
+    private List<GroupEvent> groupEvents = new ArrayList<>();
 
     @Override
-    public void save(EventGroup object) {
-        eventGroups.add(object);
+    public void save(GroupEvent object) {
+        groupEvents.add(object);
     }
 
     @Override
-    public EventGroup findById(Object id) {
-        return eventGroups.stream().filter(g -> g.getId().equals(id)).findFirst().orElse(null);
+    public GroupEvent findById(Object id) {
+        return groupEvents.stream().filter(g -> g.getId().equals(id)).findFirst().orElse(null);
     }
 
     @Override
-    public void delete(EventGroup object) {
+    public void delete(GroupEvent object) {
 
     }
 
     @Override
-    public List<EventGroup> findAll() {
+    public List<GroupEvent> findAll() {
         return null;
     }
 }
