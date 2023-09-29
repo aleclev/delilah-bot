@@ -42,7 +42,7 @@ public class NotificationBroadcastService {
     Integer minimumMinuteDelay;
 
     public NotificationBroadcastReport broadCastToTagsAsUser(List<String> tags, String message, String discordId, Guild guild, Clock clock, String messageUrl)
-            throws NotificationCooldownException, ExecutionException, InterruptedException {
+            throws NotificationCooldownException {
         User user = userService.getOrRegisterUserByDiscordId(discordId);
 
         Duration minimumDelayForNotification = Duration.of(minimumMinuteDelay, ChronoUnit.MINUTES);
