@@ -1,20 +1,20 @@
 package delilah.infrastructure.repositories.mongoDB;
 
-import delilah.domain.models.lookingForGroup.EventGroup;
+import delilah.domain.models.groupEvent.GroupEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class EventGroupRepository extends MongoRepositoryImpl<EventGroup, String> implements delilah.infrastructure.repositories.EventGroupRepository {
+public class EventGroupRepository extends MongoRepositoryImpl<GroupEvent, String> implements delilah.infrastructure.repositories.EventGroupRepository {
 
     @Override
-    public EventGroup findById(Object id) {
-        return mongoTemplate.findById(id, EventGroup.class);
+    public GroupEvent findById(Object id) {
+        return mongoTemplate.findById(id, GroupEvent.class);
     }
 
     @Override
-    public List<EventGroup> findAll() {
-        return mongoTemplate.findAll(EventGroup.class);
+    public List<GroupEvent> findAll() {
+        return mongoTemplate.findAll(GroupEvent.class);
     }
 }

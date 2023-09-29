@@ -1,8 +1,10 @@
-package delilah.domain.models.lookingForGroup;
+package delilah.domain.models.groupEvent;
 
 import delilah.domain.exceptions.LookingForGroupException;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Clock;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Document
-public class EventGroup {
+public class GroupEvent {
 
     @Id
     private String id;
@@ -24,9 +26,11 @@ public class EventGroup {
     private List<String> reserveIds;
     private Integer maxSize;
 
+    private Instant startTime;
     private Instant lastActivity;
 
-    public EventGroup(String id, String ownerId, Activity activity, String description, List<String> participantsIds, List<String> reserveIds, Integer maxSize, Instant lastActivity) {
+    public GroupEvent(String id, String ownerId, Activity activity, String description, List<String> participantsIds,
+                      List<String> reserveIds, Integer maxSize, Instant lastActivity, Instant startTime) {
         this.id = id;
         this.activity = activity;
         this.ownerId = ownerId;
@@ -35,6 +39,7 @@ public class EventGroup {
         this.reserveIds = reserveIds;
         this.maxSize = maxSize;
         this.lastActivity = lastActivity;
+        this.startTime = startTime;
     }
 
     public void joinGroup(String discordId) {
@@ -66,9 +71,21 @@ public class EventGroup {
         lastActivity = instant;
     }
 
-    public Duration timeSinceLastActivity(Clock clock) {
+    private Duration timeSinceLastActivity(Clock clock) {
 
         return Duration.between(lastActivity, clock.instant());
+    }
+
+    public boolean isActive(Clock clock, Integer maxInactivitySeconds) {
+        return !isStarted(clock) || !isExceedingMaxInactivityThreshold(clock, maxInactivitySeconds);
+    }
+
+    public boolean isExceedingMaxInactivityThreshold(Clock clock, Integer maxInactivitySeconds) {
+        return Duration.between(lastActivity, clock.instant()).getSeconds() > maxInactivitySeconds;
+    }
+
+    public boolean isStarted(Clock clock) {
+        return clock.instant().isAfter(startTime);
     }
 
     public boolean userWithIdInParticipants(String discordId) {

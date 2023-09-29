@@ -2,7 +2,7 @@ package delilah.client.interactions.buttons.lookingForGroup;
 
 import delilah.client.interactions.slashCommands.notification.NotificationBroadcastCommand;
 import delilah.client.interactions.buttons.AbstractButtonCommand;
-import delilah.services.lookingForGroup.LookingForGroupService;
+import delilah.services.groupEvent.GroupEventService;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 public class LFGAlertButton extends AbstractButtonCommand {
 
     @Autowired
-    private LookingForGroupService lfgService;
+    private GroupEventService lfgService;
 
     @Autowired
     private NotificationBroadcastCommand notificationService;

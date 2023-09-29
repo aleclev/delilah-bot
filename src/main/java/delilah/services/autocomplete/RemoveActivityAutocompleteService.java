@@ -1,11 +1,9 @@
 package delilah.services.autocomplete;
 
-import delilah.domain.models.lookingForGroup.Activity;
 import delilah.domain.models.notification.NotificationSubscription;
 import delilah.domain.models.user.User;
 import delilah.infrastructure.repositories.ActivityRepository;
 import delilah.infrastructure.repositories.UserRepository;
-import delilah.services.UserService;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import org.springframework.stereotype.Component;

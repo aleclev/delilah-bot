@@ -1,6 +1,6 @@
 package delilah.infrastructure.repositories.mongoDB;
 
-import delilah.domain.models.lookingForGroup.Activity;
+import delilah.domain.models.groupEvent.Activity;
 import delilah.infrastructure.repositories.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;

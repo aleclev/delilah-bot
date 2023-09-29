@@ -1,10 +1,10 @@
-package delilah.services.lookingForGroup;
+package delilah.services.groupEvent;
 
 import delilah.domain.exceptions.DelilahException;
 import delilah.domain.exceptions.LookingForGroupException;
 import delilah.domain.factories.EventGroupFactory;
-import delilah.domain.models.lookingForGroup.Activity;
-import delilah.domain.models.lookingForGroup.EventGroup;
+import delilah.domain.models.groupEvent.Activity;
+import delilah.domain.models.groupEvent.GroupEvent;
 import delilah.domain.models.notification.NotificationBroadcastReport;
 import delilah.infrastructure.repositories.ActivityRepository;
 import delilah.infrastructure.repositories.EventGroupRepository;
@@ -20,18 +20,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class LookingForGroupService {
+public class GroupEventService {
     @Autowired
     private EventGroupFactory eventGroupFactory;
 
     @Autowired
-    private LFGSummonService lfgSummonService;
+    private GroupEventSummonService groupEventSummonService;
 
     @Autowired
     private ActivityRepository activityRepository;
@@ -51,7 +52,8 @@ public class LookingForGroupService {
     @Autowired
     private EventGroupRepository eventGroupRepository;
 
-    public String createEventGroup(String ownerId, String title, String description, Integer maxSize) throws ExecutionException, InterruptedException {
+    public String createEventGroup(String ownerId, String title, String description, Integer maxSize,
+                                   Instant startTime) throws ExecutionException, InterruptedException {
 
         Activity activity = activityRepository.findById(title);
 
@@ -63,7 +65,7 @@ public class LookingForGroupService {
         var message = (getLfgChannel()).sendMessageEmbeds(eb.build()).addActionRow(getActionRow1()).addActionRow(getActionRow2())
                 .mapToResult().submit().get().get();
 
-        EventGroup group = eventGroupFactory.createEventGroup(message.getId(), ownerId, activity, description, maxSize);
+        GroupEvent group = eventGroupFactory.createEventGroup(message.getId(), ownerId, activity, description, maxSize, startTime);
 
         this.eventGroupRepository.save(group);
 
@@ -74,7 +76,7 @@ public class LookingForGroupService {
 
     public void joinGroup(String discordId, String messageId) {
 
-        EventGroup group = eventGroupRepository.findById(messageId);
+        GroupEvent group = eventGroupRepository.findById(messageId);
 
         group.joinGroup(discordId);
         group.logActivityAtTime(clock.instant());
@@ -85,7 +87,7 @@ public class LookingForGroupService {
 
     public void joinGroupAlternate(String discordId, String messageId) {
 
-        EventGroup group = eventGroupRepository.findById(messageId);
+        GroupEvent group = eventGroupRepository.findById(messageId);
 
         group.joinGroupAsReserve(discordId);
         group.logActivityAtTime(clock.instant());
@@ -96,22 +98,22 @@ public class LookingForGroupService {
 
     public void summonGroup(String discordId, String messageId) {
 
-        EventGroup group = getGroupByMessageId(messageId);
+        GroupEvent group = getGroupByMessageId(messageId);
 
         if (!discordId.equals(group.getOwnerId())) throw new LookingForGroupException("Only the group owner can summon the group.");
 
         String messageUrl = getLfgChannel().getJumpUrl() + "/" + messageId;
 
-        lfgSummonService.summonGroup(group, messageUrl);
+        groupEventSummonService.summonGroup(group, messageUrl);
 
         group.logActivityAtTime(clock.instant());
         eventGroupRepository.save(group);
         updateEmbed(messageId, group);
     }
 
-    private EventGroup getGroupByMessageId(String messageId) {
+    private GroupEvent getGroupByMessageId(String messageId) {
 
-        EventGroup group = eventGroupRepository.findById(messageId);
+        GroupEvent group = eventGroupRepository.findById(messageId);
 
         if (Objects.isNull(group)) throw new LookingForGroupException("Error finding event.");
 
@@ -120,7 +122,7 @@ public class LookingForGroupService {
 
     public void leaveGroup(String discordId, String messageId) {
 
-        EventGroup group = eventGroupRepository.findById(messageId);
+        GroupEvent group = eventGroupRepository.findById(messageId);
 
         group.leaveGroup(discordId);
 
@@ -131,7 +133,7 @@ public class LookingForGroupService {
 
     public NotificationBroadcastReport sendAlert(String discordId, String messageId, String messageUrl) throws ExecutionException, InterruptedException {
 
-        EventGroup group = getGroupByMessageId(messageId);
+        GroupEvent group = getGroupByMessageId(messageId);
 
         if (!discordId.equals(group.getOwnerId())) throw new LookingForGroupException("Only the group owner can send alerts.");
 
@@ -145,11 +147,15 @@ public class LookingForGroupService {
 
     }
 
-    private void updateEmbed(String messageId, EventGroup eventGroup) {
+    public void updateEmbed(GroupEvent groupEvent) {
+        updateEmbed(groupEvent.getId(), groupEvent);
+    }
 
-        GroupEventEmbedBuilder builder = new GroupEventEmbedBuilder();
+    private void updateEmbed(String messageId, GroupEvent groupEvent) {
 
-        getLfgChannel().editMessageEmbedsById(messageId, builder.fromEventGroup(eventGroup).build()).queue();
+        GroupEventEmbedBuilder builder = new GroupEventEmbedBuilder(clock);
+
+        getLfgChannel().editMessageEmbedsById(messageId, builder.fromEventGroup(groupEvent).build()).queue();
     }
 
     private TextChannel getLfgChannel() {
