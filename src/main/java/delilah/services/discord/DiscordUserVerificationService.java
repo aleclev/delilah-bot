@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -20,7 +21,7 @@ public class DiscordUserVerificationService {
         this.restTemplate = restTemplate;
     }
 
-    public DiscordUserDTO verifyUserFromAccessToken(String accessToken) {
+    public DiscordUserDTO verifyUserFromAccessToken(String accessToken) throws HttpClientErrorException {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
