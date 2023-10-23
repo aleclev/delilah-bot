@@ -5,19 +5,20 @@ import delilah.domain.factories.UserFactory;
 import delilah.domain.models.dictionnary.Dictionary;
 import delilah.domain.models.user.User;
 import delilah.infrastructure.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserService {
 
-    @Autowired
-    DictionaryFactory dictionaryFactory;
-    @Autowired
-    UserFactory userFactory;
+    private final DictionaryFactory dictionaryFactory;
+    private final UserFactory userFactory;
+    private final UserRepository userRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    public UserService(DictionaryFactory dictionaryFactory, UserFactory userFactory, UserRepository userRepository) {
+        this.dictionaryFactory = dictionaryFactory;
+        this.userFactory = userFactory;
+        this.userRepository = userRepository;
+    }
 
     public User getOrRegisterUserByDiscordId(String discordId) {
         User user = userRepository.findByDiscordId(discordId);

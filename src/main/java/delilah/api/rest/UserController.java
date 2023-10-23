@@ -43,6 +43,5 @@ public class UserController {
         } catch(HttpClientErrorException.Unauthorized e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
     }
 }
