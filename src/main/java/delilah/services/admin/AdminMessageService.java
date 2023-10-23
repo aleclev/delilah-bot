@@ -71,6 +71,9 @@ public class AdminMessageService {
     }
 
     public URI createMessage(String accessToken, String channelId, String content) throws ExecutionException, InterruptedException, URISyntaxException {
+
+        authorizeAdmin(accessToken);
+
         Message message = jda
                 .getChannelById(TextChannel.class, channelId)
                 .sendMessage(content).mapToResult().submit().get().get();
