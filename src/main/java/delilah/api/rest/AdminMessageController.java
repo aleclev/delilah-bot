@@ -2,10 +2,11 @@ package delilah.api.rest;
 
 import delilah.api.rest.dto.DiscordChannelDTO;
 import delilah.api.rest.dto.MessageContentDto;
+import delilah.domain.exceptions.DelilahException;
+import delilah.services.admin.AdminMessageService;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -20,49 +22,69 @@ import java.util.stream.Collectors;
 @RequestMapping("admin/message")
 public class AdminMessageController {
 
-    private final JDA jda;
+    private final AdminMessageService adminMessageService;
     private final String sherpaRunGuildId;
 
-    public AdminMessageController(JDA jda,
+    public AdminMessageController(AdminMessageService adminMessageService,
                                   @Value("${delilah.discord.test-server.id}") String sherpaRunGuildId) {
-        this.jda = jda;
+        this.adminMessageService = adminMessageService;
         this.sherpaRunGuildId = sherpaRunGuildId;
     }
 
     @GetMapping("channels")
-    public List<DiscordChannelDTO> getChannels() {
+    public ResponseEntity<List<DiscordChannelDTO>> getChannels(@RequestHeader("access_token") String accessToken) {
 
-        return jda.getGuildById(sherpaRunGuildId)
-                .getChannels(false).stream()
-                .map(c -> new DiscordChannelDTO(c.getName(), c.getId()))
-                .collect(Collectors.toList());
+        try {
+            return ResponseEntity.ok(adminMessageService.getChannels(accessToken, sherpaRunGuildId));
+        } catch (DelilahException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @GetMapping("")
-    public String getMessageContentById(@PathParam("channelId") String channelId,
-                                        @PathParam("messageId") String messageId) throws ExecutionException, InterruptedException {
+    @GetMapping
+    public ResponseEntity<MessageContentDto> getMessageContentById(@RequestHeader("access_token") String accessToken,
+                                                                   @PathParam("channelId") String channelId,
+                                                                   @PathParam("messageId") String messageId)
+            throws ExecutionException, InterruptedException {
 
-        return jda.getTextChannelById(channelId).retrieveMessageById(messageId).mapToResult().submit().get().get().getContentDisplay();
+        try {
+            return ResponseEntity.ok(adminMessageService.getMessageContentById(accessToken, channelId, messageId));
+        } catch (DelilahException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PatchMapping()
-    public ResponseEntity updateExistingMessage(@PathParam("channelId") String channelId,
+    @PatchMapping
+    public ResponseEntity updateExistingMessage(@RequestHeader("access_token") String accessToken,
+                                                @PathParam("channelId") String channelId,
                                                 @PathParam("messageId") String messageId,
                                                 @RequestBody MessageContentDto messageContentDto) {
 
-        jda.getTextChannelById(channelId).editMessageById(messageId, messageContentDto.content).queue();
-
-        return ResponseEntity.ok().build();
+        try {
+            adminMessageService.updateExistingMessage(accessToken, channelId, messageId, messageContentDto.content);
+            return ResponseEntity.ok().build();
+        } catch (DelilahException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping()
-    public ResponseEntity createMessage(@PathParam("channelId") String channelId, @RequestBody MessageContentDto messageContentDto
+    @PostMapping
+    public ResponseEntity createMessage(@RequestHeader("access_token") String accessToken,
+                                        @PathParam("channelId") String channelId,
+                                        @RequestBody MessageContentDto messageContentDto
     ) throws ExecutionException, InterruptedException, URISyntaxException {
 
-        Message message = jda
-                .getChannelById(TextChannel.class, channelId)
-                .sendMessage(messageContentDto.content).mapToResult().submit().get().get();
-
-        return ResponseEntity.created(new URI(message.getJumpUrl())).build();
+        try {
+            return ResponseEntity
+                    .created(adminMessageService.createMessage(accessToken, channelId, messageContentDto.content)).build();
+        } catch (DelilahException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 }
