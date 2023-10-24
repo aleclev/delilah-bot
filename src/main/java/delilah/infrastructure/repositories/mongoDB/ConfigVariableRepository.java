@@ -1,0 +1,28 @@
+package delilah.infrastructure.repositories.mongoDB;
+
+import delilah.domain.models.groupEvent.GroupEvent;
+import delilah.infrastructure.repositories.ConfigVariable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class ConfigVariableRepository extends MongoRepositoryImpl<ConfigVariable, String> implements delilah.infrastructure.repositories.ConfigVariableRepository {
+
+    private final MongoTemplate mongoTemplate;
+
+    public ConfigVariableRepository(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public ConfigVariable findById(Object id) {
+        return mongoTemplate.findById(id, ConfigVariable.class);
+    }
+
+    @Override
+    public List<ConfigVariable> findAll() {
+        return mongoTemplate.findAll(ConfigVariable.class);
+    }
+}
