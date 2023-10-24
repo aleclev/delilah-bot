@@ -7,10 +7,11 @@ import delilah.domain.exceptions.DelilahException;
 import delilah.domain.models.permission.Role;
 import delilah.domain.models.user.User;
 import delilah.infrastructure.repositories.UserRepository;
+import delilah.services.auth.AuthService;
 import delilah.services.discord.DiscordUserVerificationService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -27,16 +28,18 @@ public class AdminMessageService {
 
     private final UserRepository userRepository;
     private final JDA jda;
+    private final AuthService authService;
 
-    public AdminMessageService(DiscordUserVerificationService discordUserVerificationService, UserRepository userRepository, JDA jda) {
+    public AdminMessageService(DiscordUserVerificationService discordUserVerificationService, UserRepository userRepository, JDA jda, AuthService authService) {
         this.discordUserVerificationService = discordUserVerificationService;
         this.userRepository = userRepository;
         this.jda = jda;
+        this.authService = authService;
     }
 
     public List<DiscordChannelDTO> getChannels(String accessToken, String guildId) {
 
-        authorizeAdmin(accessToken);
+        authService.authorizeAdminFromDiscordAccessToken(accessToken);
 
         return jda.getGuildById(guildId)
                 .getChannels(false).stream()
@@ -47,7 +50,7 @@ public class AdminMessageService {
     public MessageContentDto getMessageContentById(String accessToken, String channelId, String messageId)
             throws ExecutionException, InterruptedException {
 
-        authorizeAdmin(accessToken);
+        authService.authorizeAdminFromDiscordAccessToken(accessToken);
 
         String content = jda.getTextChannelById(channelId)
                 .retrieveMessageById(messageId)
@@ -66,31 +69,18 @@ public class AdminMessageService {
 
     public void updateExistingMessage(String accessToken, String channelId, String messageId, String content) {
 
-        authorizeAdmin(accessToken);
+        authService.authorizeAdminFromDiscordAccessToken(accessToken);
         jda.getTextChannelById(channelId).editMessageById(messageId, content).queue();
     }
 
     public URI createMessage(String accessToken, String channelId, String content) throws ExecutionException, InterruptedException, URISyntaxException {
 
-        authorizeAdmin(accessToken);
+        authService.authorizeAdminFromDiscordAccessToken(accessToken);
 
         Message message = jda
                 .getChannelById(TextChannel.class, channelId)
                 .sendMessage(content).mapToResult().submit().get().get();
 
         return new URI(message.getJumpUrl());
-    }
-
-    private void authorizeAdmin(String accessToken) {
-
-        DiscordUserDTO discordUserDTO = discordUserVerificationService.verifyUserFromAccessToken(accessToken);
-
-        if (Objects.isNull(discordUserDTO))
-            throw new DelilahException("Unauthorized");
-
-        User user = userRepository.findByDiscordId(discordUserDTO.id);
-
-        if (!user.hasRole(Role.ADMIN))
-            throw new DelilahException("Unauthorized");
     }
 }

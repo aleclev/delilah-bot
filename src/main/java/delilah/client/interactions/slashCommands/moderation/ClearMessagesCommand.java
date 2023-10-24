@@ -4,7 +4,7 @@ import delilah.client.interactions.slashCommands.AbstractSlashSingleCommand;
 import delilah.client.interactions.slashCommands.commandPayloads.ClearCommandPayload;
 import delilah.client.interactions.slashCommands.payloadProcessing.annotations.ConsumesPayload;
 import delilah.services.moderation.ClearMessageService;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

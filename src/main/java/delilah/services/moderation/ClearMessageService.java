@@ -3,11 +3,8 @@ package delilah.services.moderation;
 import delilah.domain.exceptions.DelilahException;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Component
 public class ClearMessageService {
