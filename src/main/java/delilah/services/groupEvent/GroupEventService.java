@@ -2,7 +2,7 @@ package delilah.services.groupEvent;
 
 import delilah.domain.exceptions.DelilahException;
 import delilah.domain.exceptions.LookingForGroupException;
-import delilah.domain.factories.EventGroupFactory;
+import delilah.domain.factories.GroupEventFactory;
 import delilah.domain.models.groupEvent.Activity;
 import delilah.domain.models.groupEvent.GroupEvent;
 import delilah.domain.models.notification.NotificationBroadcastReport;
@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class GroupEventService {
     @Autowired
-    private EventGroupFactory eventGroupFactory;
+    private GroupEventFactory groupEventFactory;
 
     @Autowired
     private GroupEventSummonService groupEventSummonService;
@@ -65,7 +65,7 @@ public class GroupEventService {
         var message = (getLfgChannel()).sendMessageEmbeds(eb.build()).addActionRow(getActionRow1()).addActionRow(getActionRow2())
                 .mapToResult().submit().get().get();
 
-        GroupEvent group = eventGroupFactory.createEventGroup(message.getId(), ownerId, activity, description, maxSize, startTime);
+        GroupEvent group = groupEventFactory.createEventGroup(message.getId(), ownerId, activity, description, maxSize, startTime);
 
         this.eventGroupRepository.save(group);
 

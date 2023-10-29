@@ -33,11 +33,12 @@ public class User {
 
     private PermissionProfile permissionProfile;
 
-    public User(String discordId, String userId, Dictionary rootDictionary, NotificationProfile notificationProfile) {
+    public User(String discordId, String userId, Dictionary rootDictionary, NotificationProfile notificationProfile, PermissionProfile permissionProfile) {
         this.discordId = discordId;
         this.userId = userId;
         this.rootDictionary = rootDictionary;
         this.notificationProfile = notificationProfile;
+        this.permissionProfile = permissionProfile;
     }
 
     public List<NotificationSubscription> getMatchingSubscriptions(List<NotificationSubscription> subscriptions) {

@@ -8,8 +8,11 @@ import java.util.List;
 
 public abstract class MongoRepositoryImpl<T, ID> implements Repository<T> {
 
-    @Autowired
-    MongoTemplate mongoTemplate;
+    protected MongoTemplate mongoTemplate;
+
+    public MongoRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     @Override
     public void save(T object) {

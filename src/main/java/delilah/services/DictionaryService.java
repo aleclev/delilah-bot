@@ -1,5 +1,6 @@
 package delilah.services;
 
+import delilah.domain.exceptions.dictionary.DuplicateEntryException;
 import delilah.domain.models.dictionnary.Dictionary;
 import delilah.domain.models.dictionnary.DictionaryDefinition;
 import delilah.domain.models.dictionnary.DictionaryEntry;
@@ -21,24 +22,24 @@ public class DictionaryService {
         this.userRepository = userRepository;
     }
 
-    public boolean addToUserDictionary(String userDiscordId, String stringWord, String stringDefinition) {
-        User user = userRepository.findByDiscordId(userDiscordId);
+    public void addToUserDictionary(String userDiscordId, String stringWord, String stringDefinition)
+            throws DuplicateEntryException {
+        User user = userRepository.findById(userDiscordId);
 
         DictionaryWord word = new DictionaryWord(stringWord);
         DictionaryDefinition definition = new DictionaryDefinition(stringDefinition);
 
         DictionaryEntry newEntry = new DictionaryEntry(word, definition);
-        boolean temp = user.getRootDictionary().addEntry(newEntry);
+
+        user.getRootDictionary().addEntry(newEntry);
 
         userRepository.save(user);
-
-        return temp;
     }
 
     public DictionaryEntry removeDictionaryEntryForUser(String discordId, String word) {
-        User user = userRepository.findByDiscordId(discordId);
+        User user = userRepository.findById(discordId);
 
-        DictionaryEntry entry = user.getRootDictionary().findEntry(word);
+        DictionaryEntry entry = user.getRootDictionary().getEntryByWord(word);
 
         var temp = user.getRootDictionary().removeEntry(entry);
         userRepository.save(user);
@@ -47,20 +48,20 @@ public class DictionaryService {
     }
 
     public DictionaryEntry getDictionaryEntryForUser(String userDiscordId, String word) {
-        User user = userRepository.findByDiscordId(userDiscordId);
+        User user = userRepository.findById(userDiscordId);
 
-        return user.getRootDictionary().findEntry(word);
+        return user.getRootDictionary().getEntryByWord(word);
     }
 
     public List<DictionaryEntry> getEntriesLikeInputForUser(String discordId, String input) {
-        User user = userRepository.findByDiscordId(discordId);
+        User user = userRepository.findById(discordId, true);
 
         DictionaryWord compareWord = new DictionaryWord(input);
         return user.getRootDictionary().findEntriesSimilarTo(compareWord);
     }
 
     public Dictionary getDictionaryForUser(String userDiscordId) {
-        User user = userRepository.findByDiscordId(userDiscordId);
+        User user = userRepository.findById(userDiscordId);
 
         return user.getRootDictionary();
     }

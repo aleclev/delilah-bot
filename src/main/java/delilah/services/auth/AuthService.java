@@ -29,7 +29,7 @@ public class AuthService {
         if (Objects.isNull(discordUserDTO))
             throw new DelilahException("Unauthorized");
 
-        User user = userRepository.findByDiscordId(discordUserDTO.id);
+        User user = userRepository.findById(discordUserDTO.id);
 
         if (!user.hasRole(Role.ADMIN))
             throw new DelilahException("Unauthorized");

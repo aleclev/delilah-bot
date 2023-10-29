@@ -6,6 +6,8 @@ public interface Repository<T> {
     void save(T object);
 
     T findById(Object id);
+
+    T findById(Object id, boolean searchCache);
     
     void delete(T object);
 

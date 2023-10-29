@@ -21,6 +21,11 @@ public class EventGroupRepositoryInMemory implements EventGroupRepository {
     }
 
     @Override
+    public GroupEvent findById(Object id, boolean searchCache) {
+        return findById(id);
+    }
+
+    @Override
     public void delete(GroupEvent object) {
 
     }

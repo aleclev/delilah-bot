@@ -26,7 +26,7 @@ public class RemoveActivityAutocompleteService implements AutoCompleteService {
 
     @Override
     public List<Command.Choice> getSuggestions(CommandAutoCompleteInteraction event) {
-        User user = userRepository.findByDiscordId(event.getUser().getId());
+        User user = userRepository.findById(event.getUser().getId());
         List<NotificationSubscription> subscribed = new ArrayList<>();
 
         if (Objects.nonNull(user)) subscribed = user.getNotificationProfile().getSubscriptions();

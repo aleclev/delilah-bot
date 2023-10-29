@@ -2,7 +2,6 @@ package delilah.infrastructure.repositories.mongoDB;
 
 import delilah.domain.models.groupEvent.Activity;
 import delilah.infrastructure.repositories.ActivityRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
@@ -12,12 +11,20 @@ import java.util.stream.Collectors;
 @Component
 public class MongoActivityRepository extends MongoRepositoryImpl<Activity, String> implements ActivityRepository {
 
-    @Autowired
     private MongoTemplate mongoTemplate;
+
+    public MongoActivityRepository(MongoTemplate mongoTemplate) {
+        super(mongoTemplate);
+    }
 
     @Override
     public Activity findById(Object id) {
         return mongoTemplate.findById(id, Activity.class);
+    }
+
+    @Override
+    public Activity findById(Object id, boolean searchCache) {
+        return findById(id);
     }
 
     @Override

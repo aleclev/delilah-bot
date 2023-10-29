@@ -34,10 +34,7 @@ public class DictionaryGetEntryCommand extends AbstractSlashSubcommand {
         String discordId = commandEvent.getUser().getId();
         DictionaryEntry entry = dictionaryService.getDictionaryEntryForUser(discordId, word);
 
-        if (entry == null)
-            commandEvent.reply("Word not found.").queue();
-        else
-            commandEvent.reply(String.format("%s", entry)).queue();
+        commandEvent.reply(entry.toString()).queue();
     }
 
     @Override

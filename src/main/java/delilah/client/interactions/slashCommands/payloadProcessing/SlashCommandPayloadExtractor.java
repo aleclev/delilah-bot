@@ -57,7 +57,7 @@ public class SlashCommandPayloadExtractor {
 
     private void injectValue(Field field, Object payload, Object value) throws IllegalAccessException {
 
-        if (value instanceof User) value = userRepository.findByDiscordId(((User) value).getId());
+        if (value instanceof User) value = userRepository.findById(((User) value).getId());
 
         field.set(payload, value);
     }
