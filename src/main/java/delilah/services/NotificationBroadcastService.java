@@ -56,7 +56,7 @@ public class NotificationBroadcastService {
 
         List<NotificationSubscription> subscriptions = tags.stream().map(NotificationSubscription::new).collect(Collectors.toList());
 
-        List<User> subscribedUsers = userRepository.fetchBySubscriptions(subscriptions);
+        List<User> subscribedUsers = userRepository.findBySubscriptions(subscriptions);
         List<User> onlineUsers = getOnlineUsers(subscribedUsers, guild);
         List<User> blockingUsers = getBlockingUsers(onlineUsers, user);
         List<User> usersToMessage = new ArrayList<>(onlineUsers);

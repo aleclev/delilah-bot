@@ -62,7 +62,7 @@ public class MongoUserRepository extends MongoRepositoryImpl<User, String> imple
     }
 
     @Override
-    public List<User> fetchBySubscriptions(List<NotificationSubscription> subscriptions) {
+    public List<User> findBySubscriptions(List<NotificationSubscription> subscriptions) {
         return findAll().stream().filter(u -> !u.getMatchingSubscriptions(subscriptions).isEmpty()).collect(Collectors.toList());
     }
 

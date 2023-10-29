@@ -1,5 +1,7 @@
 package infrastructure;
 
+import delilah.domain.exceptions.user.UserNotFoundException;
+import delilah.domain.models.notification.NotificationSubscription;
 import delilah.domain.models.user.User;
 import delilah.infrastructure.repositories.cache.Cache;
 import delilah.infrastructure.repositories.cache.CachedEntity;
@@ -10,10 +12,12 @@ import org.mockito.Mockito;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import testUtil.UserBuilder;
 
+import java.util.List;
 import java.time.Clock;
 import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -72,5 +76,49 @@ public class MongoUserRepositoryTest {
     public void givenExpiredCachedUser_whenPurgingCache_thenUserRemovedFromCache() {
 
 
+    }
+
+    @Test
+    public void givenUserInCache_whenFindingUserByIdAndSearchingCache_thenCacheIsSearched() {
+
+        Mockito.when(userCache.findById(id)).thenReturn(user);
+
+        mongoUserRepository.findById(id, true);
+
+        Mockito.verify(userCache).findById(id);
+    }
+
+    @Test
+    public void givenUserNotInCache_whenFindingUserByIdAndSearchingCache_thenSearchesDatabase() {
+
+        Mockito.when(mongoTemplate.findOne(any(), eq(User.class))).thenReturn(user);
+        Mockito.when(clock.instant()).thenReturn(Instant.ofEpochMilli(60_000));
+
+        mongoUserRepository.findById(id, true);
+
+        Mockito.verify(mongoTemplate).findOne(any(), eq(User.class));
+    }
+
+    @Test
+    public void givenUserNotInDatabase_whenFindingUserById_thenThrowsUserNotFoundException() {
+
+        assertThrows(UserNotFoundException.class,
+                () -> mongoUserRepository.findById(id));
+    }
+
+    @Test
+    public void givenUserWithSubscription_whenSearchingBySubscriptions_thenUserIsReturned() {
+        NotificationSubscription subscription = new NotificationSubscription("lw");
+        User withSubscription =
+                new UserBuilder()
+                .genericUser()
+                .withSubscription(subscription)
+                .build();
+        Mockito.when(mongoTemplate.findAll(User.class)).thenReturn(List.of(withSubscription, user));
+
+        List<User> result = mongoUserRepository.findBySubscriptions(List.of(subscription));
+
+        assertThat(result).contains(withSubscription);
+        assertThat(result).doesNotContain(user);
     }
 }

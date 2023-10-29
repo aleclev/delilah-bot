@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface UserRepository extends Repository<User> {
 
-    List<User> fetchBySubscriptions(List<NotificationSubscription> subscriptions);
+    List<User> findBySubscriptions(List<NotificationSubscription> subscriptions);
 }
