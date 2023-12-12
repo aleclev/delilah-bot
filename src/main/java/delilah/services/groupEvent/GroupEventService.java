@@ -1,8 +1,8 @@
 package delilah.services.groupEvent;
 
 import delilah.domain.exceptions.DelilahException;
-import delilah.domain.exceptions.LookingForGroupException;
-import delilah.domain.factories.EventGroupFactory;
+import delilah.domain.exceptions.groupEvent.GroupEventException;
+import delilah.domain.factories.GroupEventFactory;
 import delilah.domain.models.groupEvent.Activity;
 import delilah.domain.models.groupEvent.GroupEvent;
 import delilah.domain.models.notification.NotificationBroadcastReport;
@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class GroupEventService {
     @Autowired
-    private EventGroupFactory eventGroupFactory;
+    private GroupEventFactory groupEventFactory;
 
     @Autowired
     private GroupEventSummonService groupEventSummonService;
@@ -65,7 +65,7 @@ public class GroupEventService {
         var message = (getLfgChannel()).sendMessageEmbeds(eb.build()).addActionRow(getActionRow1()).addActionRow(getActionRow2())
                 .mapToResult().submit().get().get();
 
-        GroupEvent group = eventGroupFactory.createEventGroup(message.getId(), ownerId, activity, description, maxSize, startTime);
+        GroupEvent group = groupEventFactory.createEventGroup(message.getId(), ownerId, activity, description, maxSize, startTime);
 
         this.eventGroupRepository.save(group);
 
@@ -100,7 +100,7 @@ public class GroupEventService {
 
         GroupEvent group = getGroupByMessageId(messageId);
 
-        if (!discordId.equals(group.getOwnerId())) throw new LookingForGroupException("Only the group owner can summon the group.");
+        if (!discordId.equals(group.getOwnerId())) throw new GroupEventException("Only the group owner can summon the group.");
 
         String messageUrl = getLfgChannel().getJumpUrl() + "/" + messageId;
 
@@ -115,7 +115,7 @@ public class GroupEventService {
 
         GroupEvent group = eventGroupRepository.findById(messageId);
 
-        if (Objects.isNull(group)) throw new LookingForGroupException("Error finding event.");
+        if (Objects.isNull(group)) throw new GroupEventException("Error finding event.");
 
         return group;
     }
@@ -135,7 +135,7 @@ public class GroupEventService {
 
         GroupEvent group = getGroupByMessageId(messageId);
 
-        if (!discordId.equals(group.getOwnerId())) throw new LookingForGroupException("Only the group owner can send alerts.");
+        if (!discordId.equals(group.getOwnerId())) throw new GroupEventException("Only the group owner can send alerts.");
 
         return broadcastService.broadCastToTagsAsUser(
                 group.getActivity().getAllRelatedActivities(),

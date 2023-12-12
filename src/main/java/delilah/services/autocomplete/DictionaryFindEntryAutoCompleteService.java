@@ -12,8 +12,11 @@ import java.util.stream.Collectors;
 @Component
 public class DictionaryFindEntryAutoCompleteService implements AutoCompleteService {
 
-    @Autowired
     DictionaryService dictionaryService;
+
+    public DictionaryFindEntryAutoCompleteService(DictionaryService dictionaryService) {
+        this.dictionaryService = dictionaryService;
+    }
 
     @Override
     public List<Command.Choice> getSuggestions(CommandAutoCompleteInteraction event) {

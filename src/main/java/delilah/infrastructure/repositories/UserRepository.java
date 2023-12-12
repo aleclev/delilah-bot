@@ -6,7 +6,5 @@ import java.util.List;
 
 public interface UserRepository extends Repository<User> {
 
-    User findByDiscordId(String id);
-
     List<User> findBySubscriptions(List<NotificationSubscription> subscriptions);
 }

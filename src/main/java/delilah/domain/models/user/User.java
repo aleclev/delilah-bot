@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Clock;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,21 +22,17 @@ public class User {
     @Id
     String discordId;
 
-    private String userId;
-
-    private ArrayList<Dictionary> dictionaries;
-
     private NotificationProfile notificationProfile;
 
     private Dictionary rootDictionary;
 
     private PermissionProfile permissionProfile;
 
-    public User(String discordId, String userId, Dictionary rootDictionary, NotificationProfile notificationProfile) {
+    public User(String discordId, Dictionary rootDictionary, NotificationProfile notificationProfile, PermissionProfile permissionProfile) {
         this.discordId = discordId;
-        this.userId = userId;
         this.rootDictionary = rootDictionary;
         this.notificationProfile = notificationProfile;
+        this.permissionProfile = permissionProfile;
     }
 
     public List<NotificationSubscription> getMatchingSubscriptions(List<NotificationSubscription> subscriptions) {

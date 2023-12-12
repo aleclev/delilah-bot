@@ -29,9 +29,8 @@ public class AddToDictionaryCommand extends AbstractSlashSubcommand {
         String definition = payload1.definition;
         String discordId = commandEvent.getUser().getId();
 
-        if (dictionaryService.addToUserDictionary(discordId, word, definition))
-            commandEvent.reply("Added entry!").queue();
-        else
-            commandEvent.reply("Word already exists in your dictionary.").queue();
+        dictionaryService.addToUserDictionary(discordId, word, definition);
+
+        commandEvent.reply("Entry Added!").queue();
     }
 }
