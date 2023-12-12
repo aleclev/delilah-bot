@@ -56,8 +56,6 @@ public class UserService {
         PermissionProfile permissionProfile = permissionProfileFactory.createDefault();
         User user = userFactory.createUser(discordId, dictionary, permissionProfile, notificationProfile);
         userRepository.save(user);
-        user.setRootDictionary(dictionary);
-        userRepository.save(user);
 
         return user;
     }

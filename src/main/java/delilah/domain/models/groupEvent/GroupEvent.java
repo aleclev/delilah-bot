@@ -1,10 +1,8 @@
 package delilah.domain.models.groupEvent;
 
-import delilah.domain.exceptions.LookingForGroupException;
+import delilah.domain.exceptions.groupEvent.GroupEventException;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Clock;
@@ -44,9 +42,9 @@ public class GroupEvent {
 
     public void joinGroup(String discordId) {
 
-        if (participantsIds.contains(discordId)) throw new LookingForGroupException("You are already in this group.");
+        if (participantsIds.contains(discordId)) throw new GroupEventException("You are already in this group.");
 
-        if (atCapacity()) throw new LookingForGroupException("Group at capacity.");
+        if (atCapacity()) throw new GroupEventException("Group at capacity.");
 
         reserveIds.remove(discordId);
         participantsIds.add(discordId);
@@ -54,7 +52,7 @@ public class GroupEvent {
 
     public void joinGroupAsReserve(String discordId) {
 
-        if (participantsIds.contains(discordId) || reserveIds.contains(discordId)) throw new LookingForGroupException("You are already in this group.");
+        if (participantsIds.contains(discordId) || reserveIds.contains(discordId)) throw new GroupEventException("You are already in this group.");
 
         participantsIds.remove(discordId);
         reserveIds.add(discordId);

@@ -1,6 +1,5 @@
 package delilah.infrastructure.repositories.cache;
 
-import delilah.infrastructure.repositories.CachedUser;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -40,18 +39,21 @@ public class Cache<T> {
         cachedEntities.add(cachedEntity);
     }
 
-    private void remove(String searchId) {
+    public void remove(String searchId) {
 
         cachedEntities.stream().filter(e -> e.getSearchId().equals(searchId)).findFirst()
                 .map(cachedEntities::remove);
     }
 
-    @Scheduled(fixedDelay = CachedUser.MAX_MILLIS_LIFETIME)
+    @Scheduled(fixedRateString = "${delilah.cache.max_millis_entity_lifetime}")
     public void pruneCache() {
 
-        List<CachedEntity<T>> expiredUsers = cachedEntities.stream().filter(c -> c.isExpired(clock)).collect(Collectors.toList());
+        List<CachedEntity<T>> expiredEntities =
+                cachedEntities.stream()
+                        .filter(c -> c.isExpired(clock))
+                        .collect(Collectors.toList());
 
-        cachedEntities.removeAll(expiredUsers);
+        cachedEntities.removeAll(expiredEntities);
     }
 
 }

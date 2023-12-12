@@ -1,7 +1,7 @@
 package delilah.services.groupEvent;
 
 import delilah.domain.exceptions.DelilahException;
-import delilah.domain.exceptions.LookingForGroupException;
+import delilah.domain.exceptions.groupEvent.GroupEventException;
 import delilah.domain.factories.GroupEventFactory;
 import delilah.domain.models.groupEvent.Activity;
 import delilah.domain.models.groupEvent.GroupEvent;
@@ -100,7 +100,7 @@ public class GroupEventService {
 
         GroupEvent group = getGroupByMessageId(messageId);
 
-        if (!discordId.equals(group.getOwnerId())) throw new LookingForGroupException("Only the group owner can summon the group.");
+        if (!discordId.equals(group.getOwnerId())) throw new GroupEventException("Only the group owner can summon the group.");
 
         String messageUrl = getLfgChannel().getJumpUrl() + "/" + messageId;
 
@@ -115,7 +115,7 @@ public class GroupEventService {
 
         GroupEvent group = eventGroupRepository.findById(messageId);
 
-        if (Objects.isNull(group)) throw new LookingForGroupException("Error finding event.");
+        if (Objects.isNull(group)) throw new GroupEventException("Error finding event.");
 
         return group;
     }
@@ -135,7 +135,7 @@ public class GroupEventService {
 
         GroupEvent group = getGroupByMessageId(messageId);
 
-        if (!discordId.equals(group.getOwnerId())) throw new LookingForGroupException("Only the group owner can send alerts.");
+        if (!discordId.equals(group.getOwnerId())) throw new GroupEventException("Only the group owner can send alerts.");
 
         return broadcastService.broadCastToTagsAsUser(
                 group.getActivity().getAllRelatedActivities(),

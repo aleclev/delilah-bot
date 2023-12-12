@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import delilah.domain.exceptions.NotificationCooldownException;
+import delilah.domain.exceptions.notification.TooManyAlertsException;
 import delilah.domain.models.notification.NotificationBroadcastReport;
 import delilah.domain.models.notification.NotificationSubscription;
 import delilah.domain.models.user.User;
@@ -46,13 +46,13 @@ public class NotificationBroadcastService {
     Integer minimumMinuteDelay;
 
     public NotificationBroadcastReport broadCastToTagsAsUser(List<String> tags, String message, String discordId, Guild guild, Clock clock, String messageUrl)
-            throws NotificationCooldownException {
+            throws TooManyAlertsException {
         User user = userService.getOrRegisterUserByDiscordId(discordId);
 
         Duration minimumDelayForNotification = Duration.of(minimumMinuteDelay, ChronoUnit.MINUTES);
 
         if (user.isAllowedToBroadcast(minimumDelayForNotification, clock))
-            throw new NotificationCooldownException(String.format("This action has a %s minutes cooldown. Come back later.", minimumMinuteDelay));
+            throw new TooManyAlertsException(String.format("This action has a %s minutes cooldown. Come back later.", minimumMinuteDelay));
 
         List<NotificationSubscription> subscriptions = tags.stream().map(NotificationSubscription::new).collect(Collectors.toList());
 

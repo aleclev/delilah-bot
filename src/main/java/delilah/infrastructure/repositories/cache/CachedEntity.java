@@ -1,13 +1,9 @@
 package delilah.infrastructure.repositories.cache;
 
-import delilah.infrastructure.repositories.CachedUser;
 import lombok.Getter;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class CachedEntity<T> {

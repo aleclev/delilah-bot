@@ -32,6 +32,6 @@ public class UserBuilder {
         return this;
     }
     public User build() {
-        return new User(discordId, userId, rootDictionary, notificationProfile, permissionProfile);
+        return new User(discordId, rootDictionary, notificationProfile, permissionProfile);
     }
 }

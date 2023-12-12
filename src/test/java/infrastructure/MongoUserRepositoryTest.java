@@ -64,7 +64,7 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void whenFetchingUserById_thenUserAddedToCache() {
-        Mockito.when(mongoTemplate.findOne(any(), eq(User.class))).thenReturn(user);
+        Mockito.when(mongoTemplate.findById(id, User.class)).thenReturn(user);
         Mockito.when(clock.instant()).thenReturn(Instant.ofEpochMilli(60_000));
 
         mongoUserRepository.findById(id);
@@ -91,12 +91,12 @@ public class MongoUserRepositoryTest {
     @Test
     public void givenUserNotInCache_whenFindingUserByIdAndSearchingCache_thenSearchesDatabase() {
 
-        Mockito.when(mongoTemplate.findOne(any(), eq(User.class))).thenReturn(user);
+        Mockito.when(mongoTemplate.findById(id, User.class)).thenReturn(user);
         Mockito.when(clock.instant()).thenReturn(Instant.ofEpochMilli(60_000));
 
         mongoUserRepository.findById(id, true);
 
-        Mockito.verify(mongoTemplate).findOne(any(), eq(User.class));
+        Mockito.verify(mongoTemplate).findById(id, User.class);
     }
 
     @Test

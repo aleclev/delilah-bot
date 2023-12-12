@@ -31,9 +31,8 @@ public class MongoUserRepository extends MongoRepositoryImpl<User, String> imple
 
     @Override
     public User findById(Object id) {
-        Query discordIdMatch = new Query();
-        discordIdMatch.addCriteria(Criteria.where("discordId").is(id));
-        User user = mongoTemplate.findOne(discordIdMatch, User.class);
+
+        User user = mongoTemplate.findById(id, User.class);
 
         if (Objects.isNull(user))
             throw new UserNotFoundException("Error! User not found. You may need to register.");
