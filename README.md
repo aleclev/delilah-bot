@@ -16,7 +16,7 @@ Then, from the root of the project, run the following command:
 
 This will install all required dependencies.
 
-To execute this project you will need a Java JDK (version 18+ recommended). You can start the project with the following command:
+To execute this project you will need JDK11. You can start the project with the following command:
 `java $JAVA_OPTS -cp target/classes:target/dependency/* delilah.DelilahApplication`
 
 ### Environnment variables and External Dependencies

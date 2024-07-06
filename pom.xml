@@ -141,7 +141,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>dependency/</classpathPrefix>
                             <mainClass>
-                                ulaval.glo2003.Main
+                                delilah.DelilahApplication
                             </mainClass>
                         </manifest>
                     </archive>
